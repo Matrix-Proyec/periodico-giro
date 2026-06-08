@@ -3,505 +3,387 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Periódico Giro - Galería Comercial</title>
-
-  <!-- Favicon and icons for all buttons -->
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/25/25694.png" type="image/png" />
-  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/25/25694.png" />
-
-  <!-- Using Google Fonts for classic but vivid look -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
-    rel="stylesheet"
-  />
-
+  <title>Galería con paginación y modal</title>
   <style>
-    /* Reset & base */
-    * {
-      box-sizing: border-box;
-    }
+    /* Reset and base */
     body {
       margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background: #fff;
-      color: #111;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      color: #333;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
-    /* Header with buttons and banner */
+    /* Header nav with buttons */
     header {
-      background: #007acc;
+      background-color: #222;
+      padding: 0.5em 1em;
+      display: flex;
+      justify-content: center;
+      gap: 0.5em;
+      flex-wrap: wrap;
+    }
+
+    header button, header a.button-link {
+      background-color: #444;
       color: white;
-      padding: 0.5rem 1rem;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      gap: 0.5rem;
-    }
-
-    /* Buttons container */
-    nav.buttons {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    /* Buttons styling */
-    nav.buttons button {
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      background-color: #ffcc00;
       border: none;
-      padding: 0.5rem 0.8rem;
-      font-weight: 700;
-      color: #111;
-      border-radius: 5px;
+      padding: 0.5em 0.75em;
       cursor: pointer;
+      font-size: 0.9rem;
+      border-radius: 4px;
       transition: background-color 0.3s ease;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-    }
-    nav.buttons button:hover,
-    nav.buttons button:focus {
-      background-color: #ffaa00;
-      outline: none;
-      box-shadow: 0 0 8px #ffaa00;
-    }
-    nav.buttons button svg {
-      width: 18px;
-      height: 18px;
-      fill: #111;
-    }
-
-    /* Banner for maintenance message */
-    #maintenance-banner {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: #d32f2f;
-      border: 3px solid #ff5252;
-      color: white;
-      padding: 1rem 2rem;
-      font-weight: 700;
-      font-size: 1.2rem;
-      border-radius: 8px;
-      box-shadow: 0 0 15px #ff5252;
-      z-index: 1500;
-      display: none; /* Hidden by default */
-      max-width: 90vw;
-      text-align: center;
-      list-style: none;
-    }
-
-    /* Main content area for images grid */
-    main {
-      flex-grow: 1;
-      padding: 1rem;
-      background: linear-gradient(135deg, #ffefba, #ffffff);
-      display: flex;
-      flex-direction: column;
+      text-decoration: none;
+      display: inline-flex;
       align-items: center;
-      min-height: 60vh;
+      justify-content: center;
+      white-space: nowrap;
+    }
+    header button:hover, header a.button-link:hover {
+      background-color: #666;
     }
 
-    /* Grid container for images and text */
+    /* Smaller size for the new menu button */
+    header button#btn-menu {
+      font-size: 0.75rem;
+      padding: 0.35em 0.6em;
+      min-width: 60px;
+    }
+
+    /* Gallery styles */
+    main {
+      flex-grow: 0;
+      padding: 0em;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 95%;
+    }
+
     #gallery {
       display: grid;
-      gap: 1rem;
-      width: 100%;
-      max-width: 1200px;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1em;
     }
 
-    /* Each card with image and text */
     .card {
       background: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
-      overflow: hidden;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      transition: transform 0.3s ease;
-      border: 3px solid transparent;
+      outline-offset: 2px;
+      transition: transform 0.15s ease;
     }
     .card:focus,
     .card:hover {
-      transform: scale(1.05);
-      border-color: #007acc;
-      outline: none;
-      box-shadow: 0 0 10px #007acc;
+      transform: scale(1.03);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     }
 
-    /* Card image styling */
     .card img {
       width: 100%;
-      height: 140px;
-      object-fit: cover;
+      height: auto;
+      border-radius: 6px 6px 0 0;
       display: block;
     }
 
-    /* Card text container */
     .card-content {
-      padding: 0.75rem 1rem 1rem 1rem;
+      padding: 0.75em 1em 1em;
       flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
     }
 
-    /* Card header */
     .card-content h3 {
-      margin: 0 0 0.5rem 0;
-      color: #007acc;
+      margin: 0 0 0.5em 0;
       font-size: 1.1rem;
-      line-height: 1.2;
+      color: #222;
     }
 
-    /* Card paragraph text */
     .card-content p {
       margin: 0;
       font-size: 0.9rem;
-      color: #333;
-      flex-grow: 1;
+      color: #555;
     }
 
-    /* Pagination controls container */
-    .pagination {
-      margin-top: 1rem;
+    /* Pagination controls */
+    .pagination-controls {
+      margin-top: 1em;
+      text-align: center;
       display: flex;
       justify-content: center;
-      gap: 1rem;
+      gap: 0.5em;
+      flex-wrap: wrap;
     }
 
-    /* Floating modal for large image */
+    .pagination-controls button {
+      background-color: #222;
+      color: white;
+      border: none;
+      padding: 0.5em 0.9em;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+    .pagination-controls button:disabled {
+      background-color: #555;
+      cursor: not-allowed;
+    }
+    .pagination-controls button:hover:not(:disabled) {
+      background-color: #444;
+    }
+
+    /* Modal styles */
+    #modal[aria-hidden="true"] {
+      display: none;
+    }
+
     #modal {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(0,0,0,0.75);
-      display: none;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 2000;
-      padding: 1rem;
-      animation: fadeIn 0.3s ease forwards;
+      z-index: 9999;
+      padding: 1em;
     }
-    #modal[aria-hidden="false"] {
-      display: flex;
-    }
-
     #modal-content {
-      position: relative;
+      background: white;
       max-width: 90vw;
       max-height: 90vh;
-      background: white;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 0 20px #007acc;
-      animation: scaleIn 0.3s ease forwards;
+      border-radius: 8px;
+      overflow: auto;
+      box-shadow: 0 0 20px rgba(0,0,0,0.7);
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
-
-    #modal-content img {
+    #modal-image {
       max-width: 100%;
-      max-height: 80vh;
+      max-height: 70vh;
+      border-radius: 8px 8px 0 0;
       object-fit: contain;
-      border-bottom: 1px solid #ddd;
     }
-
     #modal-caption {
-      padding: 0.5rem 1rem 1rem 1rem;
+      padding: 1em;
       font-size: 1rem;
-      color: #333;
+      color: #222;
       text-align: center;
+      line-height: 1.4;
     }
-
-    /* Close button top right */
     #modal-close {
       position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      background: #d32f2f;
-      border: none;
+      top: 0.5em;
+      right: 0.5em;
+      background: #222;
       color: white;
+      border: none;
       font-size: 1.4rem;
-      width: 32px;
-      height: 32px;
+      width: 2em;
+      height: 2em;
       border-radius: 50%;
       cursor: pointer;
-      box-shadow: 0 0 5px #d32f2f;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       transition: background-color 0.3s ease;
     }
     #modal-close:hover,
     #modal-close:focus {
-      background-color: #ff5252;
+      background-color: #555;
       outline: none;
-      box-shadow: 0 0 10px #ff5252;
     }
 
-    /* Animations */
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
-    }
-    @keyframes scaleIn {
-      from {transform: scale(0.8);}
-      to {transform: scale(1);}
-    }
-
-    /* Responsive typography */
-    @media (max-width: 600px) {
-      nav.buttons {
-        justify-content: center;
-        gap: 0.4rem;
-      }
-      nav.buttons button {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.9rem;
-      }
-      .card img {
-        height: 120px;
-      }
-      .card-content h3 {
-        font-size: 1rem;
-      }
-      .card-content p {
-        font-size: 0.85rem;
-      }
-      #modal-caption {
-        font-size: 0.9rem;
-      }
+    /* Maintenance banner */
+    #maintenance-banner {
+      background: #ffcc00;
+      color: #222;
+      text-align: center;
+      padding: 0.4em 1em;
+      font-weight: bold;
+      display: none;
     }
 
-    /* Footer styling */
+    /* Footer */
     footer {
-      background-color: #007acc;
+      background-color: #222;
       color: white;
       text-align: center;
-      padding: 0.8rem 1rem;
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size: 0.75rem;
+      padding: 0.75em 1em;
       user-select: none;
+      flex-shrink: 0;
     }
   </style>
 </head>
 <body>
+  <!-- Maintenance banner (hidden by default) -->
+  <div id="maintenance-banner" role="alert" aria-live="assertive"></div>
+
   <!-- Header with navigation buttons -->
   <header>
-    <nav class="buttons" aria-label="Controles de navegación de página y grupo WhatsApp">
-      <button type="button" id="btn-prev" aria-label="Página anterior">
-        <!-- Left arrow icon -->
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
-          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-        </svg>
-        Anterior
-      </button>
-      <button type="button" id="btn-next" aria-label="Página siguiente">
-        Siguiente
-        <!-- Right arrow icon -->
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
-          <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
-        </svg>
-      </button>
-      <button type="button" id="btn-whatsapp" aria-label="Grupo de WhatsApp del periódico">
-        <!-- WhatsApp icon -->
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.031-.967-.273-.1-.472-.148-.672.15-.198.297-.767.966-.94 1.164-.173.198-.347.223-.644.075-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.173.198-.297.298-.495.099-.198.05-.371-.025-.52-.075-.148-.672-1.611-.92-2.206-.242-.579-.487-.5-.672-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.413-.074-.123-.272-.198-.57-.347zM12.004 2.003c-5.523 0-10 4.477-10 10 0 1.77.464 3.42 1.27 4.866L2 22l5.313-1.295a9.96 9.96 0 0 0 4.691 1.2c5.523 0 10-4.477 10-10s-4.477-10-10-10z"/>
-        </svg>
-        WhatsApp
-      </button>
-    </nav>
+    <button id="btn-prev" aria-label="Página anterior">Anterior</button>
+    <!-- New small menu button linking to index.html -->
+    <a href="index.html" id="btn-menu" class="button-link" aria-label="Ir al menú principal">Menú</a>
+    <button id="btn-next" aria-label="Página siguiente">Siguiente</button>
+    <button id="btn-whatsapp" aria-label="Grupo de WhatsApp">WhatsApp</button>
   </header>
 
-  <!-- Maintenance banner in list mode (appears center screen) -->
-  <ul id="maintenance-banner" role="alert" aria-live="assertive" aria-atomic="true">
-    <li><strong>Mensaje del sitio:</strong> Estamos realizando mantenimiento. Algunas funciones pueden no estar disponibles.</li>
-  </ul>
-
-  <!-- Main content with gallery -->
+  <!-- Main content: gallery -->
   <main>
-    <section id="gallery" aria-label="Galería de gráficos del periódico">
-      <!-- Cards inserted by JS -->
-    </section>
+    <section id="gallery" aria-live="polite" aria-label="Galería de imágenes con paginación"></section>
 
-    <!-- Pagination buttons (also for pages, if needed) -->
-    <nav class="pagination" aria-label="Navegación de páginas">
-      <button type="button" id="page-prev" aria-label="Página anterior">
-        <!-- Left arrow icon -->
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20">
-          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-        </svg>
-        Anterior
-      </button>
-      <button type="button" id="page-next" aria-label="Página siguiente">
-        Siguiente
-        <!-- Right arrow icon -->
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20">
-          <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
-        </svg>
-      </button>
+    <!-- Pagination controls -->
+    <nav class="pagination-controls" aria-label="Controles de paginación">
+      <button id="page-prev" aria-label="Página anterior">Anterior</button>
+      <button id="page-next" aria-label="Página siguiente">Siguiente</button>
     </nav>
   </main>
 
-  <!-- Modal for enlarged image -->
-  <div id="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-caption" tabindex="-1">
+  <!-- Modal for image viewing -->
+  <div id="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-caption">
     <div id="modal-content">
-      <button id="modal-close" aria-label="Cerrar imagen ampliada" title="Cerrar">&times;</button>
-      <img src="" alt="" id="modal-image" />
-      <div id="modal-caption"></div>
+      <button id="modal-close" aria-label="Cerrar modal">&times;</button>
+      <img id="modal-image" src="" alt="" />
+      <p id="modal-caption"></p>
     </div>
   </div>
 
-  <!-- Footer -->
+  <!-- Footer with creator info -->
   <footer>
-    &copy; Periódico Giro
+    Creador: Gabriel R. 05 de junio del 2026
   </footer>
 
   <script>
-    // Data for 15 images with header and text
+    // Data array with 15 items containing id, title, description, imgSrc, imgAlt
     const data = [
       {
         id: 1,
-        title: "Titular 1:",
-        description: "Oposición venezolana presenta en panamá hoja de ruta para una transición democrática y exige nuevo CNE.",
-        imgSrc:          
-          "img/periodico1.jpg",
+        title: "Página 1:",
+        
+        description: "Haz clic en la imagen para ampliarla .",
+        
+        imgSrc: "img/periodico1.jpg",
         imgAlt: "Gráfico o imagen representativa 1",
       },
       {
         id: 2,
-        title: "Titular 2 : ",
-        description: "CLEB aprueba reforma parcial de su Reglamento de Interior y Debate.",
-        imgSrc:
-          "img/periodico2.jpg",
+        title: "Página 2",
+        
+        description: " .",
+        
+        imgSrc: "img/periodico2.jpg",
         imgAlt: "Gráfico o imagen representativa 2",
       },
       {
         id: 3,
-        title: "Titular 3 : ",
-        description: "Denuncian la extraña paralización de la carretera Tumeremo-Atlantico, obra que  fue  iniciada por el exministro Carlos Osorio.",
-        imgSrc:
-          "img/periodico3.jpg",
+        title: "Página 3",
+        
+        description: " .",
+        
+        imgSrc: "img/periodico3.jpg",
         imgAlt: "Gráfico o imagen representativa 3",
       },
       {
         id: 4,
-        title: "Titular 4 :",
-        description: "Por qué las elecciones presidenciales?.",
-        imgSrc:
-          "img/periodico4.jpg",
+        title: "Página 4",
+        
+        description: " .",
+        
+        imgSrc: "img/periodico4.jpg",
         imgAlt: "Gráfico o imagen representativa 4",
       },
       {
         id: 5,
-        title: "Titular 5 :",
-        description: "El palmar exige renovación política y gerencial frente al rezago municipal.",
-        imgSrc:
-          "img/periodico5.jpg",
+        title: "Página 5",
+        
+        description: " .",
+        
+        imgSrc: "img/periodico5.jpg",
         imgAlt: "Gráfico o imagen representativa 5",
       },
       {
         id: 6,
-        title: "Titular 6: ",
-        description: "Expreso político Daniel Romero denuncia el secuestro institucional de sus hijos en Brasil tras tres años de injusta prisión.",
-        imgSrc:
-          "img/periodico6.jpg",
+        title: "Página 6",
+        
+        description: " .",
+        
+        imgSrc: "img/periodico6.jpg",
         imgAlt: "Gráfico o imagen representativa 6",
       },
       {
         id: 7,
-        title: "Titular 7:",
-        description: "Histórica unión en Guayana: 38 gremios y movimientos sociales consolidan plataforma única de luchar por elecciones libres.",
-        imgSrc:
-          "img/periodico7.jpg",
+        title: "Página 7",
+        
+        description: " .",
+        
+        imgSrc: "img/periodico8.jpg",
         imgAlt: "Gráfico o imagen representativa 7",
       },
       {
         id: 8,
-        title: "Titular 8:",
-        description: "Oposición venezolana presenta en Panamá hoja de ruta para una transición democrática y exige nuevos CNE.",
-        imgSrc:
-          "img/periodico8.jpg",
+        title: "Página 8",
+        description: " .",
+        imgSrc: "img/periodico8.jpg",
         imgAlt: "Gráfico o imagen representativa 8",
       },
       {
         id: 9,
-        title: "Titular 9: ",
-        description: "Gobernadora Yulisbeth García respondió más de 2500 papelitos de la esperanza en Bolívar.",
-        imgSrc:
-          "img/periodico9.jpg",
+        title: "Página 9",
+        description: ".",
+        imgSrc: "img/periodico9.jpg",
         imgAlt: "Gráfico o imagen representativa 9",
       },
       {
         id: 10,
-        title: "Titular 10:",
-        description: "Giro el círculo de la información veraz.",
-        imgSrc:
-          "img/periodico10.jpg",
+        title: "Página 10",
+        description: ".",
+        imgSrc: "img/periodico10.jpg",
         imgAlt: "Gráfico o imagen representativa 10",
       },
       {
         id: 11,
-        title: "Titular 11:",
-        description: " Sin información.",
-        imgSrc:
-          "img/giro.jpg",
-        imgAlt: " No funciona",
+        title: "Página 11",
+        description: " .",
+        imgSrc: "img/periodico11.jpg",
+        imgAlt: "Gráfico o imagen representativa 11",
       },
       {
         id: 12,
-        title: "Titular 12:",
-        description: "Sin información.",
-        imgSrc:
-          "img/giro.jpg",
+        title: "Página 12",
+        description: " .",
+        imgSrc: "img/periodico12.jpg",
         imgAlt: "Gráfico o imagen representativa 12",
       },
       {
         id: 13,
-        title: "Titular 13:",
-        description: "Sin información.",
-        imgSrc:
-          "img/giro.jpg",
+        title: "Página 13",
+        description: " .",
+        imgSrc: "img/periodico13.jpg",
         imgAlt: "Gráfico o imagen representativa 13",
       },
       {
         id: 14,
-        title: "Titular 14:",
-        description: "Sin información.",
-        imgSrc:
-          "img/giro.jpg",
+        title: "Página 14",
+        description: " Sin información.",
+        imgSrc: "img/giro.jpg",
         imgAlt: "Gráfico o imagen representativa 14",
       },
       {
         id: 15,
-        title: "Titular 15:",
-        description: "Sin información.",
-        imgSrc:
-          "img/giro.jpg",
+        title: "Página 15",
+        description: " Sin información.",
+        imgSrc: "img/giro.jpg",
         imgAlt: "Gráfico o imagen representativa 15",
       },
     ];
 
     // Pagination variables
-    // Since requirement was 15 options visible at once, we show all on one page
-    // But buttons for next/previous page exist, so let's simulate 5 items per page, 3 pages total
     const itemsPerPage = 5;
     let currentPage = 1;
     const totalPages = Math.ceil(data.length / itemsPerPage);
@@ -568,10 +450,14 @@
         card.appendChild(content);
 
         // Click and keyboard event to open modal
-        card.addEventListener("click", () => openModal(item));
+        card.addEventListener("click", () => {
+          lastFocusedCard = card;
+          openModal(item);
+        });
         card.addEventListener("keydown", (e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
+            lastFocusedCard = card;
             openModal(item);
           }
         });
@@ -591,6 +477,9 @@
       // Update pagination buttons disabled state
       pagePrev.disabled = currentPage === 1;
       pageNext.disabled = currentPage === totalPages;
+
+      btnPrev.disabled = currentPage === 1;
+      btnNext.disabled = currentPage === totalPages;
     }
 
     /**
@@ -648,7 +537,7 @@
       }
     });
 
-    // Pagination buttons handlers
+    // Pagination buttons handlers (bottom controls)
     pagePrev.addEventListener("click", () => {
       if (currentPage > 1) {
         currentPage--;
@@ -662,7 +551,7 @@
       }
     });
 
-    // Buttons on top nav for previous and next pages simulate same as pagination
+    // Top nav previous and next buttons handlers
     btnPrev.addEventListener("click", () => {
       if (currentPage > 1) {
         currentPage--;
@@ -679,18 +568,22 @@
     // WhatsApp group button: Open link in new tab (replace with actual link)
     btnWhatsapp.addEventListener("click", () => {
       window.open(
-        "https://chat.whatsapp.com/JSMzBwhieduLEbcIfahvO5",
+        "https://chat.whatsapp.com/examplegroupinvite",
         "_blank",
         "noopener,noreferrer"
       );
     });
 
-    // Show maintenance banner example: 
-    // To show the banner, uncomment the line below, or control with your own logic.
-    // maintenanceBanner.style.display = "block";
+    // Show maintenance banner example (uncomment to activate)
+    
+  // Uncomment below lines to show maintenance banner with a message
+  /*
+  maintenanceBanner.textContent = "Página en mantenimiento, por favor regrese más tarde.";
+  maintenanceBanner.style.display = "block";
+  */
 
-    // Initial render
-    renderGallery();
-  </script>
-  </body>
-  </HTML>
+  // Initial render gallery on page load
+  renderGallery();
+</script>
+</body>
+</HTML>
