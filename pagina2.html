@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Periódico Giro - Galería Comercial</title>
+
+  <!-- Favicon and icons for all buttons -->
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/25/25694.png" type="image/png" />
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/25/25694.png" />
+
+  <!-- Using Google Fonts for classic but vivid look -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    /* Reset & base */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background: #fff;
+      color: #111;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header with buttons and banner */
+    header {
+      background: #007acc;
+      color: white;
+      padding: 0.5rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      gap: 0.5rem;
+    }
+
+    /* Buttons container */
+    nav.buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    /* Buttons styling */
+    nav.buttons button {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      background-color: #ffcc00;
+      border: none;
+      padding: 0.5rem 0.8rem;
+      font-weight: 700;
+      color: #111;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
+    nav.buttons button:hover,
+    nav.buttons button:focus {
+      background-color: #ffaa00;
+      outline: none;
+      box-shadow: 0 0 8px #ffaa00;
+    }
+    nav.buttons button svg {
+      width: 18px;
+      height: 18px;
+      fill: #111;
+    }
+
+    /* Banner for maintenance message */
+    #maintenance-banner {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #d32f2f;
+      border: 3px solid #ff5252;
+      color: white;
+      padding: 1rem 2rem;
+      font-weight: 700;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 15px #ff5252;
+      z-index: 1500;
+      display: none; /* Hidden by default */
+      max-width: 90vw;
+      text-align: center;
+      list-style: none;
+    }
+
+    /* Main content area for images grid */
+    main {
+      flex-grow: 1;
+      padding: 1rem;
+      background: linear-gradient(135deg, #ffefba, #ffffff);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 60vh;
+    }
+
+    /* Grid container for images and text */
+    #gallery {
+      display: grid;
+      gap: 1rem;
+      width: 100%;
+      max-width: 1200px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    /* Each card with image and text */
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease;
+      border: 3px solid transparent;
+    }
+    .card:focus,
+    .card:hover {
+      transform: scale(1.05);
+      border-color: #007acc;
+      outline: none;
+      box-shadow: 0 0 10px #007acc;
+    }
+
+    /* Card image styling */
+    .card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Card text container */
+    .card-content {
+      padding: 0.75rem 1rem 1rem 1rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Card header */
+    .card-content h3 {
+      margin: 0 0 0.5rem 0;
+      color: #007acc;
+      font-size: 1.1rem;
+      line-height: 1.2;
+    }
+
+    /* Card paragraph text */
+    .card-content p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #333;
+      flex-grow: 1;
+    }
+
+    /* Pagination controls container */
+    .pagination {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    /* Floating modal for large image */
+    #modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.75);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      padding: 1rem;
+      animation: fadeIn 0.3s ease forwards;
+    }
+    #modal[aria-hidden="false"] {
+      display: flex;
+    }
+
+    #modal-content {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 20px #007acc;
+      animation: scaleIn 0.3s ease forwards;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #modal-content img {
+      max-width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+      border-bottom: 1px solid #ddd;
+    }
+
+    #modal-caption {
+      padding: 0.5rem 1rem 1rem 1rem;
+      font-size: 1rem;
+      color: #333;
+      text-align: center;
+    }
+
+    /* Close button top right */
+    #modal-close {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: #d32f2f;
+      border: none;
+      color: white;
+      font-size: 1.4rem;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 5px #d32f2f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      line-height: 1;
+      transition: background-color 0.3s ease;
+    }
+    #modal-close:hover,
+    #modal-close:focus {
+      background-color: #ff5252;
+      outline: none;
+      box-shadow: 0 0 10px #ff5252;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    @keyframes scaleIn {
+      from {transform: scale(0.8);}
+      to {transform: scale(1);}
+    }
+
+    /* Responsive typography */
+    @media (max-width: 600px) {
+      nav.buttons {
+        justify-content: center;
+        gap: 0.4rem;
+      }
+      nav.buttons button {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.9rem;
+      }
+      .card img {
+        height: 120px;
+      }
+      .card-content h3 {
+        font-size: 1rem;
+      }
+      .card-content p {
+        font-size: 0.85rem;
+      }
+      #modal-caption {
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Footer styling */
+    footer {
+      background-color: #007acc;
+      color: white;
+      text-align: center;
+      padding: 0.8rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header with navigation buttons -->
+  <header>
+    <nav class="buttons" aria-label="Controles de navegación de página y grupo WhatsApp">
+      <button type="button" id="btn-prev" aria-label="Página anterior">
+        <!-- Left arrow icon -->
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+        </svg>
+        Anterior
+      </button>
+      <button type="button" id="btn-next" aria-label="Página siguiente">
+        Siguiente
+        <!-- Right arrow icon -->
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
+        </svg>
+      </button>
+      <button type="button" id="btn-whatsapp" aria-label="Grupo de WhatsApp del periódico">
+        <!-- WhatsApp icon -->
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.031-.967-.273-.1-.472-.148-.672.15-.198.297-.767.966-.94 1.164-.173.198-.347.223-.644.075-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.173.198-.297.298-.495.099-.198.05-.371-.025-.52-.075-.148-.672-1.611-.92-2.206-.242-.579-.487-.5-.672-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.413-.074-.123-.272-.198-.57-.347zM12.004 2.003c-5.523 0-10 4.477-10 10 0 1.77.464 3.42 1.27 4.866L2 22l5.313-1.295a9.96 9.96 0 0 0 4.691 1.2c5.523 0 10-4.477 10-10s-4.477-10-10-10z"/>
+        </svg>
+        WhatsApp
+      </button>
+    </nav>
+  </header>
+
+  <!-- Maintenance banner in list mode (appears center screen) -->
+  <ul id="maintenance-banner" role="alert" aria-live="assertive" aria-atomic="true">
+    <li><strong>Mensaje del sitio:</strong> Estamos realizando mantenimiento. Algunas funciones pueden no estar disponibles.</li>
+  </ul>
+
+  <!-- Main content with gallery -->
+  <main>
+    <section id="gallery" aria-label="Galería de gráficos del periódico">
+      <!-- Cards inserted by JS -->
+    </section>
+
+    <!-- Pagination buttons (also for pages, if needed) -->
+    <nav class="pagination" aria-label="Navegación de páginas">
+      <button type="button" id="page-prev" aria-label="Página anterior">
+        <!-- Left arrow icon -->
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20">
+          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+        </svg>
+        Anterior
+      </button>
+      <button type="button" id="page-next" aria-label="Página siguiente">
+        Siguiente
+        <!-- Right arrow icon -->
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20">
+          <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
+        </svg>
+      </button>
+    </nav>
+  </main>
+
+  <!-- Modal for enlarged image -->
+  <div id="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-caption" tabindex="-1">
+    <div id="modal-content">
+      <button id="modal-close" aria-label="Cerrar imagen ampliada" title="Cerrar">&times;</button>
+      <img src="" alt="" id="modal-image" />
+      <div id="modal-caption"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; Periódico Giro
+  </footer>
+
+  <script>
+    // Data for 15 images with header and text
+    const data = [
+      {
+        id: 1,
+        title: "Titular 1:",
+        description: "Oposición venezolana presenta en panamá hoja de ruta para una transición democrática y exige nuevo CNE.",
+        imgSrc:          
+          "img/periodico1.jpg",
+        imgAlt: "Gráfico o imagen representativa 1",
+      },
+      {
+        id: 2,
+        title: "Titular 2 : ",
+        description: "CLEB aprueba reforma parcial de su Reglamento de Interior y Debate.",
+        imgSrc:
+          "img/periodico2.jpg",
+        imgAlt: "Gráfico o imagen representativa 2",
+      },
+      {
+        id: 3,
+        title: "Titular 3 : ",
+        description: "Denuncian la extraña paralización de la carretera Tumeremo-Atlantico, obra que  fue  iniciada por el exministro Carlos Osorio.",
+        imgSrc:
+          "img/periodico3.jpg",
+        imgAlt: "Gráfico o imagen representativa 3",
+      },
+      {
+        id: 4,
+        title: "Titular 4 :",
+        description: "Por qué las elecciones presidenciales?.",
+        imgSrc:
+          "img/periodico4.jpg",
+        imgAlt: "Gráfico o imagen representativa 4",
+      },
+      {
+        id: 5,
+        title: "Titular 5 :",
+        description: "El palmar exige renovación política y gerencial frente al rezago municipal.",
+        imgSrc:
+          "img/periodico5.jpg",
+        imgAlt: "Gráfico o imagen representativa 5",
+      },
+      {
+        id: 6,
+        title: "Titular 6: ",
+        description: "Expreso político Daniel Romero denuncia el secuestro institucional de sus hijos en Brasil tras tres años de injusta prisión.",
+        imgSrc:
+          "img/periodico6.jpg",
+        imgAlt: "Gráfico o imagen representativa 6",
+      },
+      {
+        id: 7,
+        title: "Titular 7:",
+        description: "Histórica unión en Guayana: 38 gremios y movimientos sociales consolidan plataforma única de luchar por elecciones libres.",
+        imgSrc:
+          "img/periodico7.jpg",
+        imgAlt: "Gráfico o imagen representativa 7",
+      },
+      {
+        id: 8,
+        title: "Titular 8:",
+        description: "Oposición venezolana presenta en Panamá hoja de ruta para una transición democrática y exige nuevos CNE.",
+        imgSrc:
+          "img/periodico8.jpg",
+        imgAlt: "Gráfico o imagen representativa 8",
+      },
+      {
+        id: 9,
+        title: "Titular 9: ",
+        description: "Gobernadora Yulisbeth García respondió más de 2500 papelitos de la esperanza en Bolívar.",
+        imgSrc:
+          "img/periodico9.jpg",
+        imgAlt: "Gráfico o imagen representativa 9",
+      },
+      {
+        id: 10,
+        title: "Titular 10:",
+        description: "Giro el círculo de la información veraz.",
+        imgSrc:
+          "img/periodico10.jpg",
+        imgAlt: "Gráfico o imagen representativa 10",
+      },
+      {
+        id: 11,
+        title: "Titular 11:",
+        description: " Sin información.",
+        imgSrc:
+          "img/giro.jpg",
+        imgAlt: " No funciona",
+      },
+      {
+        id: 12,
+        title: "Titular 12:",
+        description: "Sin información.",
+        imgSrc:
+          "img/giro.jpg",
+        imgAlt: "Gráfico o imagen representativa 12",
+      },
+      {
+        id: 13,
+        title: "Titular 13:",
+        description: "Sin información.",
+        imgSrc:
+          "img/giro.jpg",
+        imgAlt: "Gráfico o imagen representativa 13",
+      },
+      {
+        id: 14,
+        title: "Titular 14:",
+        description: "Sin información.",
+        imgSrc:
+          "img/giro.jpg",
+        imgAlt: "Gráfico o imagen representativa 14",
+      },
+      {
+        id: 15,
+        title: "Titular 15:",
+        description: "Sin información.",
+        imgSrc:
+          "img/giro.jpg",
+        imgAlt: "Gráfico o imagen representativa 15",
+      },
+    ];
+
+    // Pagination variables
+    // Since requirement was 15 options visible at once, we show all on one page
+    // But buttons for next/previous page exist, so let's simulate 5 items per page, 3 pages total
+    const itemsPerPage = 5;
+    let currentPage = 1;
+    const totalPages = Math.ceil(data.length / itemsPerPage);
+
+    const gallery = document.getElementById("gallery");
+    const modal = document.getElementById("modal");
+    const modalImage = document.getElementById("modal-image");
+    const modalCaption = document.getElementById("modal-caption");
+    const modalCloseBtn = document.getElementById("modal-close");
+    const maintenanceBanner = document.getElementById("maintenance-banner");
+
+    const btnPrev = document.getElementById("btn-prev");
+    const btnNext = document.getElementById("btn-next");
+    const btnWhatsapp = document.getElementById("btn-whatsapp");
+
+    const pagePrev = document.getElementById("page-prev");
+    const pageNext = document.getElementById("page-next");
+
+    /**
+     * Render the gallery cards for the current page.
+     * Adds animation on page change.
+     */
+    function renderGallery() {
+      // Clear existing content
+      gallery.innerHTML = "";
+
+      // Calculate start/end indexes for pagination
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = Math.min(start + itemsPerPage, data.length);
+
+      // Create fragment for better performance
+      const fragment = document.createDocumentFragment();
+
+      for (let i = start; i < end; i++) {
+        const item = data[i];
+
+        const card = document.createElement("article");
+        card.className = "card";
+        card.tabIndex = 0;
+        card.setAttribute("role", "button");
+        card.setAttribute("aria-label", `Abrir imagen: ${item.title}`);
+
+        // Image element
+        const img = document.createElement("img");
+        img.src = item.imgSrc;
+        img.alt = item.imgAlt;
+        img.loading = "lazy";
+
+        // Content container
+        const content = document.createElement("div");
+        content.className = "card-content";
+
+        // Title
+        const h3 = document.createElement("h3");
+        h3.textContent = item.title;
+
+        // Description
+        const p = document.createElement("p");
+        p.textContent = item.description;
+
+        content.appendChild(h3);
+        content.appendChild(p);
+        card.appendChild(img);
+        card.appendChild(content);
+
+        // Click and keyboard event to open modal
+        card.addEventListener("click", () => openModal(item));
+        card.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openModal(item);
+          }
+        });
+
+        fragment.appendChild(card);
+      }
+
+      gallery.appendChild(fragment);
+
+      // Animate gallery fade-in on page change
+      gallery.style.opacity = 0;
+      gallery.style.transition = "opacity 0.5s ease";
+      requestAnimationFrame(() => {
+        gallery.style.opacity = 1;
+      });
+
+      // Update pagination buttons disabled state
+      pagePrev.disabled = currentPage === 1;
+      pageNext.disabled = currentPage === totalPages;
+    }
+
+    /**
+     * Open modal with selected image and caption
+     * @param {Object} item - Image object with title, description, imgSrc, imgAlt
+     */
+    function openModal(item) {
+      modalImage.src = item.imgSrc;
+      modalImage.alt = item.imgAlt;
+      modalCaption.textContent = `${item.title} ${item.description}`;
+      modal.setAttribute("aria-hidden", "false");
+      modal.style.display = "flex";
+      modalCloseBtn.focus();
+      // Disable scrolling on body
+      document.body.style.overflow = "hidden";
+    }
+
+    /**
+     * Close modal and cleanup
+     */
+    function closeModal() {
+      modal.setAttribute("aria-hidden", "true");
+      modal.style.display = "none";
+      modalImage.src = "";
+      modalImage.alt = "";
+      modalCaption.textContent = "";
+      // Re-enable scrolling
+      document.body.style.overflow = "";
+      // Return focus to the last focused element or gallery
+      if (lastFocusedCard) {
+        lastFocusedCard.focus();
+      }
+    }
+
+    // Track last focused card for accessibility
+    let lastFocusedCard = null;
+
+    // Event listeners for modal close button and backdrop click
+    modalCloseBtn.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", (e) => {
+      // Close modal if clicking outside modal-content
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Keyboard navigation for modal (close on Escape key)
+    document.addEventListener("keydown", (e) => {
+      if (modal.getAttribute("aria-hidden") === "false") {
+        if (e.key === "Escape" || e.key === "Esc") {
+          e.preventDefault();
+          closeModal();
+        }
+      }
+    });
+
+    // Pagination buttons handlers
+    pagePrev.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderGallery();
+      }
+    });
+    pageNext.addEventListener("click", () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderGallery();
+      }
+    });
+
+    // Buttons on top nav for previous and next pages simulate same as pagination
+    btnPrev.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderGallery();
+      }
+    });
+    btnNext.addEventListener("click", () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderGallery();
+      }
+    });
+
+    // WhatsApp group button: Open link in new tab (replace with actual link)
+    btnWhatsapp.addEventListener("click", () => {
+      window.open(
+        "https://chat.whatsapp.com/JSMzBwhieduLEbcIfahvO5",
+        "_blank",
+        "noopener,noreferrer"
+      );
+    });
+
+    // Show maintenance banner example: 
+    // To show the banner, uncomment the line below, or control with your own logic.
+    // maintenanceBanner.style.display = "block";
+
+    // Initial render
+    renderGallery();
+  </script>
+  </body>
+  </HTML>
