@@ -219,6 +219,28 @@
       user-select: none;
       flex-shrink: 0;
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+     /* Estilos para el mensaje de advertencia */
+    #warning-message {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background-color: #ffcc00;
+      color: #000;
+      font-weight: bold;
+      padding: 1em;
+      text-align: center;
+      z-index: 9999;
+      font-family: Arial, sans-serif;
+    }
   </style>
 </head>
 <body>
@@ -234,6 +256,15 @@
     <button id="btn-whatsapp" aria-label="Grupo de WhatsApp">WhatsApp</button>
   </header>
 
+<div id="warning-message" role="alert" aria-live="assertive">
+    Atención: esta página intenta proteger su contenido.
+  
+
+  <h1>Disculpa está acción está bloqueada</h1>
+  
+  </div>
+
+<p><p>
   <!-- Main content: gallery -->
   <main>
     <section id="gallery" aria-live="polite" aria-label="Galería de imágenes con paginación"></section>
@@ -253,12 +284,21 @@
       <p id="modal-caption"></p>
     </div>
   </div>
+  
+  
+  
+  
+  
+  <p></p>
 
   <!-- Footer with creator info -->
   <footer>
     Creador: Gabriel R. 05 de junio del 2026
   </footer>
-
+  
+  
+  
+  
   <script>
     // Data array with 15 items containing id, title, description, imgSrc, imgAlt
     const data = [
@@ -584,6 +624,45 @@
 
   // Initial render gallery on page load
   renderGallery();
+  
+  
+  
+  
+  
+  
+  
+   // Función para mostrar el mensaje de advertencia
+    function showWarning() {
+      const warning = document.getElementById('warning-message');
+      warning.style.display = 'block';
+      // Oculta el mensaje después de 3 segundos
+      setTimeout(() => {
+        warning.style.display = 'none';
+      }, 3000);
+    }
+
+    // Deshabilitar clic derecho (abrir menú contextual)
+    window.addEventListener('contextmenu', function(event) {
+      event.preventDefault();
+      showWarning();
+    });
+
+    // Detectar teclas que abren herramientas de desarrollo
+    window.addEventListener('keydown', function(event) {
+      // F12
+      if (event.key === 'F12') {
+        event.preventDefault();
+        showWarning();
+      }
+      // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+      if (
+        (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'J')) ||
+        (event.ctrlKey && event.key === 'U')
+      ) {
+        event.preventDefault();
+        showWarning();
+      }
+    });
 </script>
 </body>
 </HTML>
