@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Descarga App - Creaciones RJ</title>
+  <style>
+    /* Reset y estilos básicos */
+    * {
+      box-sizing: border-box;
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #fff;
+      text-shadow: 0 0 8px rgba(0,0,0,0.7);
+    }
+    main {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background-color: rgba(0,0,0,0.5);
+      max-width: 600px;
+      margin: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.8);
+    }
+    h2 {
+      margin-bottom: 1rem;
+    }
+    /* Botón de descarga */
+    .btn-download {
+      background-color: #0077cc;
+      border: none;
+      color: white;
+      padding: 0.75rem 2rem;
+      font-size: 1.25rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 8px rgba(0,119,204,0.6);
+      user-select: none;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-download:hover, .btn-download:focus {
+      background-color: #005fa3;
+      outline: none;
+    }
+    /* Container del formulario */
+    .form-container {
+      background-color: rgba(255,255,255,0.1);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.2);
+    }
+    .form-container label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+    }
+    .form-container input[type="text"],
+    .form-container input[type="email"],
+    .form-container textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+      resize: vertical;
+    }
+    .form-container textarea {
+      min-height: 80px;
+    }
+    .btn-whatsapp {
+      background-color: #25d366;
+      border: none;
+      color: white;
+      padding: 0.6rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 8px rgba(37,211,102,0.6);
+      user-select: none;
+      display: inline-block;
+    }
+    .btn-whatsapp:hover, .btn-whatsapp:focus {
+      background-color: #1ebe57;
+      outline: none;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem 0;
+      background-color: rgba(0,0,0,0.7);
+      font-size: 0.9rem;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h2>Descarga Nuestra Aplicación</h2>
+    <a 
+      href="https://mega.nz/file/PAIGyKAL#L9tVADhrGf4KXfVQQlSZ3s0p-Y8HHpQgBGBx3XCVeS8" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      class="btn-download" 
+      aria-label="Descargar aplicación desde Mega"
+    >
+      Descargar App
+    </a>
+
+    <div class="form-container" aria-label="Formulario de contacto para WhatsApp">
+      <label for="nombre">Nombre</label>
+      <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required />
+
+      <label for="correo">Correo Electrónico</label>
+      <input type="email" id="correo" name="correo" placeholder="tu@correo.com" required />
+
+      <label for="mensaje">Mensaje / Comentario</label>
+      <textarea id="mensaje" name="mensaje" placeholder="Escribe tu mensaje..." required></textarea>
+
+      <button id="btnEnviarWhatsApp" class="btn-whatsapp" type="button" aria-label="Enviar información a WhatsApp">
+        Enviar a WhatsApp
+      </button>
+    </div>
+  </main>
+
+  <footer>
+    © Creaciones RJ 2026
+  </footer>
+
+  <script>
+    (() => {
+      const btnEnviar = document.getElementById('btnEnviarWhatsApp');
+
+      // Cambia por el link de invitación de tu grupo de WhatsApp o número de teléfono con código internacional
+      // Por ejemplo: número de teléfono => "5816000000" (Venezuela con código +58)
+      // Para grupos: usar link https://chat.whatsapp.com/xxxxxxx, pero no se puede enviar mensajes prellenados directamente a grupos por URL.
+      // Por eso, se enviará el mensaje al número de contacto o abrirá WhatsApp con el texto listo para copiar.
+      
+      // Aquí ejemplo con número de teléfono (sin + ni espacios)
+      // Si tienes el link de grupo, ponlo en whatsappBaseUrl = ' https://chat.whatsapp.com/BaoXbnU1x4zFKnYHHhyYd2' y usa window.open(whatsappBaseUrl);
+      const whatsappNumber = '5816000000'; // Cambia este valor
+
+      btnEnviar.addEventListener('click', () => {
+        const nombre = document.getElementById('nombre').value.trim();
+        const correo = document.getElementById('correo').value.trim();
+        const mensaje = document.getElementById('mensaje').value.trim();
+
+        if (!nombre || !correo || !mensaje) {
+          alert('Por favor, completa todos los campos antes de enviar.');
+          return;
+        }
+
+        // Validación básica correo
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(correo)) {
+          alert('Por favor, ingresa un correo electrónico válido.');
+          return;
+        }
+
+        // Construcción del mensaje para WhatsApp
+        const text = 
+          `*Nuevo mensaje desde la página de Creaciones RJ*%0A` +
+          `*Nombre:* ${encodeURIComponent(nombre)}%0A` +
+          `*Correo:* ${encodeURIComponent(correo)}%0A` +
+          `*Mensaje:* ${encodeURIComponent(mensaje)}`;
+
+        // URL para enviar mensaje
+        const whatsappUrl = `https://wa.me/whatsappNumber?text=${whatsappNumber} ${text}`;
+
+        // Abrir WhatsApp Web o App con mensaje prellenado
+        window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+      });
+    })();
+  </script>
+</body>
+</html>
