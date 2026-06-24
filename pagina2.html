@@ -319,147 +319,174 @@
     }
   }
 
-  /* Contenedor del menú */
-  #sideMenu {
-    position: fixed;
-    top: 0;
-    left: -250px; /* oculto a la izquierda */
-    width: 250px;
-    height: 100vh;
-    background: rgba(180, 0, 0, 0.85); /* rojo suave y transparente */
-    backdrop-filter: blur(12px);
-    border: 3px solid #ff4d4d;
-    animation: neoneffect 3s ease-in-out infinite;
-    display: flex;
-    flex-direction: column;
-    padding: 1.5rem 1rem;
-    transition: left 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-    z-index: 9999;
-    color: #ffe6e6;
-  }
 
-  #sideMenu.open {
-    left: 0;
-  }
 
-  /* Contenedor fecha y edición */
-  #menuHeader {
-    font-size: 0.8rem;
-    margin-bottom: 1rem;
-    line-height: 1.3;
-    user-select: none;
-  }
-  #menuHeader strong {
-    display: block;
-    margin-top: 0.3rem;
-    font-weight: 700;
-  }
-
-  /* Botones del menú */
-  #sideMenu a, #sideMenu button.colorToggle {
-    display: block;
-    margin: 0.7rem 0;
-    padding: 0.8rem 1rem;
-    color: #ffe6e6;
-    font-weight: 600;
-    text-decoration: none;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.12);
-    transition: background-color 0.25s ease, color 0.25s ease;
-    border: none;
-    cursor: pointer;
-    text-align: left;
-    font-size: 1rem;
-    user-select: none;
-  }
-  #sideMenu a:hover,
-  #sideMenu a:focus,
-  #sideMenu button.colorToggle:hover,
-  #sideMenu button.colorToggle:focus {
-    background: rgba(255, 255, 255, 0.3);
-    outline: none;
-    color: #fff;
-  }
-
-  /* Botón flotante transparente - pestaña roja sobresaliente */
-  #toggleBtn {
-    position: fixed;
-    top: 50vh;
-    left: 0;
-    /* Sobresale 12px a la izquierda para que sea visible fuera del borde */
-    width: 50px;
-    height: 110px;
-    margin-left: -12px;
-    background: rgba(180, 0, 0, 0.9);
-    border: 3px solid #ff4d4d;
-    border-radius: 0 10px 10px 0;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-    box-shadow:
-      0 0 10px #ff4d4d,
-      0 0 20px #ff1a1a,
-      0 0 30px #ff1a1a;
-    animation: neoneffect 3s ease-in-out infinite;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  }
-  #toggleBtn:hover {
-    background: rgba(200, 30, 30, 1);
-    box-shadow:
-      0 0 16px #ff6666,
-      0 0 28px #ff3333,
-      0 0 40px #ff1a1a;
-  }
-
-  /* Icono triángulo arriba para indicar menú */
-  #toggleBtn .triangle {
-    width: 18px;
-    height: 18px;
-    border-left: 4px solid white;
-    border-bottom: 4px solid white;
-    transform: rotate(45deg);
-    margin-bottom: 8px;
-  }
-
-  /* Manito SVG */
-  #toggleBtn .hand {
-    width: 28px;
-    height: 28px;
-    margin-bottom: 8px;
-  }
-
-  /* Texto vertical "Menú" */
-  #toggleBtn span {
-    writing-mode: vertical-rl;
-    color: white;
-    font-size: 11px;
-    font-weight: 700;
-    user-select: none;
-    letter-spacing: 1px;
-  }
-
-  @media (max-width: 400px) {
-    #sideMenu {
-      width: 200px;
-      padding: 1rem;
+    
+    
+    
+     /* Container for the combobox */
+    .combobox-container {
+      max-width: 320px;
+      margin: 2rem auto;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    #toggleBtn {
-      height: 90px;
-      width: 40px;
-      margin-left: -10px;
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #222;
+      font-size: 1.1rem;
     }
-    #toggleBtn .hand {
-      width: 0px;
-      height: 0px;
+
+    select {
+      width: 100%;
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      border: 2px solid #007bff;
+      border-radius: 6px;
+      background-color: #fff;
+      color: #333;
+      cursor: pointer;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
-  }
+
+    select:focus {
+      outline: none;
+      border-color: #0056b3;
+      box-shadow: 0 0 5px rgba(0, 86, 179, 0.5);
+    } 
     
     
     
     
+    
+    
+    
+    
+    
+      /* Fondo oscuro para el modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Contenedor del modal */
+    .modal {
+      background: linear-gradient(135deg, #ff416c, #ff4b2b);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(255, 75, 43, 0.5);
+      width: 90%;
+      max-width: 480px;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      position: relative;
+      padding: 2rem 2.5rem 2.5rem;
+      animation: slideDownFadeIn 0.5s ease forwards;
+    }
+
+    @keyframes slideDownFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Botón cerrar */
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: white;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      line-height: 1;
+    }
+    .modal-close:hover {
+      color: #ffeaea;
+    }
+
+    /* Título */
+    .modal h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+      text-align: center;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+
+    /* Mensaje */
+    .modal-message {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      line-height: 1.4;
+      text-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    /* Selector para redirigir */
+    .modal-select {
+      display: block;
+      width: 100%;
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+      background: white;
+      color: #ff4b2b;
+      font-weight: 600;
+      box-shadow: 0 3px 6px rgba(255,75,43,0.3);
+      transition: background-color 0.3s ease;
+    }
+    .modal-select:hover,
+    .modal-select:focus {
+      background-color: #ffe3df;
+      outline: none;
+    }
+
+    /* Imagen */
+    .modal-image {
+      display: block;
+      margin: 0 auto 1.5rem;
+      max-width: 120px;
+      border-radius: 8px;
+      box-shadow: 0 6px 15px rgba(255,75,43,0.5);
+      user-select: none;
+    }
+
+    /* Texto pequeño pie */
+    .modal-footer {
+      font-size: 0.85rem;
+      text-align: center;
+      opacity: 0.8;
+      user-select: none;
+    }
   
   </style>
 </head>
@@ -484,7 +511,21 @@
   
   </div>
 
-<p><p>
+    
+    
+      <div class="combobox-container">
+    <label for="navigation-combobox">Selector:</label>
+    <select id="navigation-combobox" aria-label="Navegación principal">
+      <option value="" selected disabled>Publicidad</option>
+      <option value="video.html">Videos Publicitarios</option>
+      <option value="mantenimiento.html">Imagen Publicitarios</option>
+      <option value="mantenimiento.html">Chat</option>
+      <option value="index.html">Salir de la Galería</option>
+    </select>
+  </div>
+  
+    
+    
   <!-- Main content: gallery -->
   <main>
     <section id="gallery" aria-live="polite" aria-label="Galería de imágenes con paginación"></section>
@@ -513,39 +554,25 @@
   </footer>
   
   
-  
-  <!-- Menú lateral -->
-<nav id="sideMenu" aria-label="Menú lateral">
-  <div id="menuHeader" aria-live="polite" aria-atomic="true">
-    <div id="fecha"></div>
-    <strong id="edicion"></strong>
+    <!-- Modal -->
+  <div id="updateModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc" tabindex="-1">
+    <div class="modal" role="document">
+      <button aria-label="Cerrar modal" class="modal-close" id="modalCloseBtn">&times;</button>
+      <h2 id="modalTitle">¡Nueva Actualización!</h2>
+      <img src="img/giro.jpg" alt="Imagen actualización" class="modal-image" />
+      <p class="modal-message" id="modalDesc">
+        ¡Nueva actualización disponible! 🚀Hemos añadido un nuevo selector en el menú para que puedas navegar más rápido. Elige la sección a la que deseas ir:
+      </p>
+      <select class="modal-select" id="pageSelector" aria-label="Seleccionar página para redirigir">
+        <option value="" selected disabled>No tocar salir en la opción X</option>
+        <option value="pagina2.html">Galeria</option>
+        <option value="pagina2.html">Galería</option>
+        <option value="pagina2.html">Galeria</option>
+      </select>
+      <div class="modal-footer">Gracias por usar nuestro sitio web.</div>
+    </div>
   </div>
-  <a href="video.html" id="btnPublicity" role="button" tabindex="0">Videos publicitarios</a>
-  <a href="mantenimiento.html" id="btnStreaming" role="button" tabindex="0">Streaming tv</a>
-  <a href="mantenimiento.html" id="btnBaul" role="button" tabindex="0">Bitácora visual</a>
-  <a href="mantenimiento.html" id="btnExtra" role="button" tabindex="0">Función Extra</a>
-  
-  <!-- Botón para cambiar color -->
-  <button class="colorToggle" aria-label="Cambiar color del menú" title="Cambiar color del menú">Cambiar color del menú</button>
-</nav>
-
-<!-- Botón flotante -->
-<button id="toggleBtn" aria-expanded="false" aria-controls="sideMenu" aria-label="Abrir menú" type="button" title="Abrir menú">
-  <div class="hand" aria-hidden="true">
-    <!-- Manito SVG estilizada -->
-    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" >
-      <path fill="#fff" d="M20 44c0-1 0-5 0-7 0-2 2-3 3-3s3 1 3 3v7h6v-14c0-2 2-4 4-4s4 2 4 4v14h2v-16c0-3 2-6 5-6 2 0 4 2 4 4v22h-24z"/>
-      <path fill="#ddd" d="M14 50h36v4H14z"/>
-    </svg>
-  </div>
-  <div class="triangle" aria-hidden="true"></div>
-  <span>Menú</span>
-</button>
-
-  
-  
-  
-  
+ 
 
   
   <script>
@@ -638,14 +665,14 @@
       {
         id: 11,
         title: "Página 11",
-        description: " Sin información.",
+        description: "Sin información .",
         imgSrc: "img/giro.jpg",
         imgAlt: "Gráfico o imagen representativa 11",
       },
       {
         id: 12,
         title: "Página 12",
-        description: " Sin información.",
+        description: "Sin información .",
         imgSrc: "img/giro.jpg",
         imgAlt: "Gráfico o imagen representativa 12",
       },
@@ -919,134 +946,76 @@
     
     
     
+     // Get reference to the select element
+    const comboBox = document.getElementById('navigation-combobox');
+
+    // Listen for changes and navigate to the selected page
+    comboBox.addEventListener('change', function () {
+      const selectedPage = this.value;
+      if (selectedPage) {
+        // Navigate to the selected page
+        window.location.href = selectedPage;
+      }
+    });
+    
+    
+ 
     
     
     
-  //Referencias a elementos
-  const menu = document.getElementById('sideMenu');
-  const toggleBtn = document.getElementById('toggleBtn');
-  const fechaEl = document.getElementById('fecha');
-  const edicionEl = document.getElementById('edicion');
-  const colorToggleBtn = document.querySelector('button.colorToggle');
+    
+    
+    
+    
+    (function() {
+      const modal = document.getElementById('updateModal');
+      const closeBtn = document.getElementById('modalCloseBtn');
+      const pageSelector = document.getElementById('pageSelector');
+      const localStorageKey = 'modalShown_v1';
 
-  // Función para formatear la fecha en español (ej: martes, 16 junio 2026)
-  function formatFecha(date) {
-    const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('es-ES', opciones);
-  }
+      // Mostrar modal solo si no se ha mostrado previamente
+      const hasShown = localStorage.getItem(localStorageKey);
+      if (!hasShown) {
+        // Mostrar modal
+        modal.classList.add('show');
+        // Enfocar modal para accesibilidad
+        modal.focus();
+      }
 
-  // Calcular número de edición basado en días desde una fecha inicial
-  // Inicio: edición 545 el 16 de junio de 2026
-  const fechaInicio = new Date(2026, 0, 1); // 16 junio 2026
-  const edicionInicio = 546;
+      // Función para cerrar modal
+      function closeModal() {
+        modal.classList.remove('show');
+        localStorage.setItem(localStorageKey, 'true');
+      }
 
-  function actualizarFechaEdicion() {
-    const hoy = new Date();
-    const diffDias = Math.floor((hoy - fechaInicio) / (1000 * 3460 * 660 * 24));
-    const edicionActual = edicionInicio + diffDias;
+      // Evento cerrar modal al hacer click en "X"
+      closeBtn.addEventListener('click', closeModal);
 
-    fechaEl.textContent = formatFecha(hoy);
-    edicionEl.textContent = `Edición Nº: ${edicionActual}`;
-  }
-
-  // Ejecutar actualización al cargar
-  actualizarFechaEdicion();
-
-  // Colores predefinidos para el menú
-  const colores = [
-    {
-      name: 'Rojo',
-      background: 'rgba(180, 0, 0, 0.85)',
-      border: '#ff4d4d',
-      animationName: 'neoneffect'
-    },
-    {
-      name: 'Azul',
-      background: 'rgba(30, 60, 120, 0.85)',
-      border: 'rgba(70, 130, 200, 0.8)',
-      animationName: 'neoneffectBlue'
-    },
-    {
-      name: 'Verde',
-      background: 'rgba(0, 120, 60, 0.85)',
-      border: 'rgba(50, 220, 100, 0.8)',
-      animationName: 'neoneffectGreen'
-    }
-  ];
-
-  // Estado color actual
-  let colorIndex = 0;
-
-  function aplicarColor(index) {
-    const color = colores[index];
-    menu.style.background = color.background;
-    menu.style.borderColor = color.border;
-    menu.style.animationName = color.animationName;
-    // Cambiar color texto y botones según color para buena visibilidad
-    if (color.name === 'Rojo') {
-      menu.style.color = '#ffe6e6';
-      Array.from(menu.querySelectorAll('a, button.colorToggle')).forEach(el => {
-        el.style.color = '#ffe6e6';
-        el.style.background = 'rgba(255, 255, 255, 0.12)';
+      // Evento para redirigir cuando se selecciona una página
+      pageSelector.addEventListener('change', (e) => {
+        const url = e.target.value;
+        if (url) {
+          // Opcional: cerrar modal antes de redirigir
+          closeModal();
+          // Redirigir
+          window.location.href = url;
+        }
       });
-    } else if (color.name === 'Azul') {
-      menu.style.color = '#e0eafe';
-      Array.from(menu.querySelectorAll('a, button.colorToggle')).forEach(el => {
-        el.style.color = '#e0eafe';
-        el.style.background = 'rgba(255, 255, 255, 0.15)';
+
+      // Cerrar modal si el usuario presiona ESC
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('show')) {
+          closeModal();
+        }
       });
-    } else if (color.name === 'Verde') {
-      menu.style.color = '#d0f0d0';
-      Array.from(menu.querySelectorAll('a, button.colorToggle')).forEach(el => {
-        el.style.color = '#d0f0d0';
-        el.style.background = 'rgba(255, 255, 255, 0.12)';
+
+      // Evitar cierre si se hace click dentro del modal (para clicks en overlay)
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal();
+        }
       });
-    }
-  }
-
-  // Cargar color guardado en localStorage (si existe)
-  const colorGuardado = localStorage.getItem('menuColorIndex');
-  if (colorGuardado !== null && !isNaN(colorGuardado)) {
-    colorIndex = Number(colorGuardado);
-    aplicarColor(colorIndex);
-  } else {
-    // Inicializar color rojo si no hay guardado
-    aplicarColor(colorIndex);
-  }
-
-  // Cambiar color al hacer click en botón y guardar en localStorage
-  colorToggleBtn.addEventListener('click', () => {
-    colorIndex = (colorIndex + 1) % colores.length;
-    aplicarColor(colorIndex);
-    localStorage.setItem('menuColorIndex', colorIndex);
-  });
-
-  // Función para abrir/cerrar menú
-  function toggleMenu() {
-    const isOpen = menu.classList.toggle('open');
-    toggleBtn.setAttribute('aria-expanded', isOpen);
-    toggleBtn.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
-  }
-
-  // Evento click en botón flotante
-  toggleBtn.addEventListener('click', toggleMenu);
-
-  // Cerrar menú si se hace click afuera cuando está abierto
-  document.addEventListener('click', (e) => {
-    if (menu.classList.contains('open') && !menu.contains(e.target) && !toggleBtn.contains(e.target)) {
-      toggleMenu();
-    }
-  });
-
-  // Accesibilidad: toggle con tecla Enter o Espacio
-  toggleBtn.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      toggleMenu();
-    }
-  });
-    
-    
+    })();
     
 </script>
 </body>
