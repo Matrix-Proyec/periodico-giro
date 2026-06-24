@@ -110,10 +110,36 @@
       font-size: 0.9rem;
       user-select: none;
     }
+    
+    
+    
+    
+    
+     /* Estilos para el mensaje de advertencia */
+    #warning-message {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background-color: #ffcc00;
+      color: #000;
+      font-weight: bold;
+      padding: 1em;
+      text-align: center;
+      z-index: 9999;
+      font-family: Arial, sans-serif;
+    }
   </style>
 </head>
 <body>
   <main>
+        <div id="warning-message" role="alert" aria-live="assertive">
+    Atención: esta página intenta proteger su código fuente.
+  
+  <h1>Disculpa esta acción esta bloqueada</h1>
+  <p>Para más información comuníquese con el desarrollador.</p>
+  </div>
+      
+      
     <h2>Descarga Nuestra Aplicación</h2>
     <a 
       href=" https://mega.nz/file/uVxzgbpY#yLPGuKWwwhglMvKfMGHvJ45_t5vy4N85x0yh_rYNJYY " 
@@ -189,6 +215,42 @@
         window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
       });
     })();
+    
+    
+    
+    
+      // Función para mostrar el mensaje de advertencia
+    function showWarning() {
+      const warning = document.getElementById('warning-message');
+      warning.style.display = 'block';
+      // Oculta el mensaje después de 3 segundos
+      setTimeout(() => {
+        warning.style.display = 'none';
+      }, 3000);
+    }
+
+    // Deshabilitar clic derecho (abrir menú contextual)
+    window.addEventListener('contextmenu', function(event) {
+      event.preventDefault();
+      showWarning();
+    });
+
+    // Detectar teclas que abren herramientas de desarrollo
+    window.addEventListener('keydown', function(event) {
+      // F12
+      if (event.key === 'F12') {
+        event.preventDefault();
+        showWarning();
+      }
+      // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+      if (
+        (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'J')) ||
+        (event.ctrlKey && event.key === 'U')
+      ) {
+        event.preventDefault();
+        showWarning();
+      }
+    });
   </script>
 </body>
 </html>
