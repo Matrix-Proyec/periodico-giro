@@ -487,10 +487,101 @@
       opacity: 0.8;
       user-select: none;
     }
-  
+
+
+
+ /* Contenedor fijo en la parte superior */
+    #download-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 90%;
+      background: rgba(192, 192, 192, 0.85); /* Plata semi-transparente */
+      color: #000; /* Texto negro para buen contraste */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem 1.1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      font-family: Arial, sans-serif;
+      z-index: 1000;
+      text-align: center;
+    }
+
+    #download-banner p {
+      margin: 0 0 0.8rem 0;
+      font-size: 1.1rem;
+      max-width: 600px;
+      line-height: 1.4;
+    }
+
+    /* Contenedor de botones centrado y con espacio */
+    #download-banner .button-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      width: 100%;
+      max-width: 30px;
+    }
+
+    /* Estilos para los botones */
+    #download-banner button {
+      background-color: #666666; /* Gris oscuro para estilo plata */
+      border: none;
+      color: #fff;
+      padding: 0.1rem 1.0rem;
+      font-size: 1rem;
+      border-radius: 08px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      flex: 1;
+      min-width: 100px;
+    }
+
+    #download-banner button:hover,
+    #download-banner button:focus {
+      background-color: #4d4d4d;
+      outline: none;
+    }
+
+    #download-banner button#close-btn {
+      background-color: #999999; /* Plata claro para "Salir" */
+      color: #000;
+    }
+
+    #download-banner button#close-btn:hover,
+    #download-banner button#close-btn:focus {
+      background-color: #7a7a7a;
+      color: #000;
+    }
+
+    /* Para que el contenido debajo no quede oculto al aparecer banner */
+    body.has-banner {
+      padding-top: 110px; /* altura aproximada del banner ajustado a dos líneas */
+    }
+
+
+      
   </style>
 </head>
 <body>
+
+<!-- Banner para descarga de app -->
+  <section id="download-banner" role="region" aria-label="Alerta de descarga de aplicación" aria-live="polite">
+    <p>Optimizado para tu celular funciones desde tu teléfono.¡Descarga la app móvil!</p>
+    <div class="button-group">
+      <button id="close-btn" aria-label="Cerrar alerta de descarga">Salir</button>
+      <button id="download-btn" aria-label="Descargar aplicación">Descargar App</button>
+    </div>
+  </section>
+
+  <main>
+    <!-- Contenido principal de la aplicación -->
+    <h1>Bienvenido a Nuestra Aplicación</h1>
+    <p>Contenido de la app aquí...</p>
+  </main>
+
+  
   <!-- Maintenance banner (hidden by default) -->
   <div id="maintenance-banner" role="alert" aria-live="assertive"></div>
 
@@ -1016,7 +1107,37 @@
         }
       });
     })();
-    
+
+
+
+
+
+     // Referencias a elementos
+    const banner = document.getElementById('download-banner');
+    const closeBtn = document.getElementById('close-btn');
+    const downloadBtn = document.getElementById('download-btn');
+
+    // Añadimos clase para evitar que el contenido quede oculto por el banner
+    document.body.classList.add('has-banner');
+
+    // Función para cerrar el banner y recordar la acción para no mostrarlo en esta sesión
+    closeBtn.addEventListener('click', () => {
+      banner.style.display = 'none';
+      document.body.classList.remove('has-banner');
+      sessionStorage.setItem('appDownloadBannerClosed', 'true');
+    });
+
+    // Función para botón descargar app (Ejemplo: redirigir a URL de descarga)
+    downloadBtn.addEventListener('click', () => {
+      // Reemplazar URL por la real de la app
+      window.location.href = 'https://tuapp.com/descargar';
+    });
+
+    // Comprobar si el usuario ya cerró el banner en esta sesión
+    if (sessionStorage.getItem('appDownloadBannerClosed') === 'true') {
+      banner.style.display = 'none';
+      document.body.classList.remove('has-banner');
+    }
 </script>
 </body>
 </HTML>
