@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Editor Visual - Diario</title>
+    <link rel="stylesheet" href="estilos.css">
+    
+     <style>
+        :root {
+    --primario: #1a1a1a;
+    --secundario: #c9252c;
+    --gris-claro: #f4f4f4;
+    --texto: #333333;
+}
+
+body {
+    font-family: 'Playfair Display', Georgia, serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: var(--texto);
+}
+
+header {
+    background-color: var(--primario);
+    color: white;
+    text-align: center;
+    padding: 30px 10px;
+    border-bottom: 8px solid var(--secundario);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.contenedor {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* Rejilla de noticias comercial */
+.noticias-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.tarjeta-noticia {
+    background: white;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Contenedor de Imagen de Noticia */
+.noticia-imagen-wrapper {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    background-color: #eaeaea;
+    cursor: pointer;
+}
+
+.noticia-imagen-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.noticia-imagen-wrapper:hover img {
+    transform: scale(1.03);
+}
+
+.noticia-cuerpo {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.noticia-titulo {
+    font-size: 1.4rem;
+    margin: 0 0 10px 0;
+    color: var(--primario);
+    line-height: 1.2;
+}
+
+.noticia-subtitulo {
+    font-size: 1rem;
+    color: #666;
+    margin: 0 0 15px 0;
+    font-style: italic;
+}
+
+.noticia-texto {
+    font-family: Arial, sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #444;
+}
+
+/* SISTEMA LIGHTBOX COMERCIAL (Página Pública) */
+.modal-flotante {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+}
+
+.imagen-ampliada {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    border-radius: 4px;
+    cursor: zoom-in;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Estado de Zoom Activo al presionar */
+.imagen-ampliada:active {
+    transform: scale(1.8);
+    cursor: zoom-out;
+}
+
+.boton-cerrar {
+    position: absolute;
+    top: 25px;
+    right: 35px;
+    color: #ffffff;
+    font-size: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+}
+
+.boton-cerrar:hover {
+    color: var(--secundario);
+}
+
+/* CONTROLES EXCLUSIVOS DE LA INTERFAZ EDITORA */
+.editor-input-file {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.indicador-subida {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-family: sans-serif;
+    border-radius: 3px;
+    pointer-events: none;
+}
+
+.editable-text:hover {
+    background-color: #fffde7;
+    outline: 2px dashed var(--secundario);
+}
+
+.boton-guardar-cambios {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: var(--secundario);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 10000;
+}
+
+.boton-guardar-cambios:hover {
+    background-color: #ad1d23;
+}
+
+
+
+
+ .item footer {
+      font-size: 0.8rem;
+      color: #666;
+      padding: 0 1rem 0.8rem;
+      text-align: right;
+    }
+    footer.site-footer {
+      background-color: #222;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      user-select: none;
+    }
+        
+        
+        
+        
+        
+        
+        
+           h1 { color: #00bcd4; margin-bottom: 20px; }
+        a { color: #cfd8dc; text-decoration: none; display: inline-block; margin-top: 20px; }
+        
+    </style>
+    
+</head>
+<body>
+
+    <header style="background-color: #2c3e50;">
+        <h2>Editor Visual de Prensa</h2>
+        <p style="margin:5px 0 0 0; color:#f1c40f;">MODO EDICIÓN ACTIVO - HAGA CLIC DIRECTAMENTE EN LOS TEXTOS O FOTOS</p>
+        <p>
+        <a href="index.html">← Volver al Login</a>
+    
+    </header>
+
+    <div class="contenedor">
+        <div id="contenedorEditor" class="noticias-grid">
+            <p style="text-align: center; grid-column: 1/-1;">Abriendo canal seguro con la base de datos...</p>
+        </div>
+    </div>
+
+
+<footer class="site-footer" role="contentinfo">
+    &copy; RJ-produción 2026
+  </footer>
+
+
+    <button class="boton-guardar-cambios" onclick="guardarTodoElPeriodico()">Publicar Cambios Globales</button>
+
+    <script>
+        // =========================================================================
+        // ATENCIÓN: PEGA AQUÍ TU URL DE LA APLICACIÓN WEB DE APPS SCRIPT
+        // =========================================================================
+        const API_URL = "https://script.google.com/macros/s/AKfycbw7tIdTnPDNgEs97bC_n8n11qqzKNgYU6TE0guFp-ZfddG1tUSPraWBMcMWD_cFoOWU3Q/exec";
+        
+        let memoriaLocalNoticias = [];
+
+        async function cargarInterfazEditora() {
+            try {
+                const respuesta = await fetch(API_URL);
+                const resultado = await respuesta.json();
+                
+                if(resultado.status === "success") {
+                    memoriaLocalNoticias = resultado.data;
+                    const contenedor = document.getElementById("contenedorEditor");
+                    contenedor.innerHTML = ""; 
+                    
+                    // Si el Sheets está vacío, creamos una estructura base para que el editor pueda trabajar
+                    if(memoriaLocalNoticias.length === 0) {
+                        memoriaLocalNoticias = [{ id: 1, titulo: "Escribe el Título Aquí", subtitulo: "Escribe el Subtítulo", texto: "Escribe el cuerpo de la noticia aquí.", imagen_url: "" }];
+                    }
+                    
+                    memoriaLocalNoticias.forEach((noticia, index) => {
+                        const tarjeta = document.createElement("article");
+                        tarjeta.className = "tarjeta-noticia";
+                        tarjeta.innerHTML = `
+                            <div class="noticia-imagen-wrapper">
+                                <img id="img-${index}" src="${noticia.imagen_url || 'https://placeholder.com'}" alt="Foto">
+                                <span class="indicador-subida">Cambiar Foto</span>
+                                <input type="file" class="editor-input-file" accept="image/*" onchange="procesarYComprimirFoto(event, ${index})">
+                            </div>
+                            <div class="noticia-cuerpo">
+                                <h2 id="tit-${index}" class="noticia-titulo editable-text" contenteditable="true" onblur="actualizarTextoMemoria(${index}, 'titulo', this.innerText)">${noticia.titulo}</h2>
+                                <h3 id="sub-${index}" class="noticia-subtitulo editable-text" contenteditable="true" onblur="actualizarTextoMemoria(${index}, 'subtitulo', this.innerText)">${noticia.subtitulo}</h3>
+                                <p id="txt-${index}" class="noticia-texto editable-text" contenteditable="true" onblur="actualizarTextoMemoria(${index}, 'texto', this.innerText)">${noticia.texto}</p>
+                            </div>
+                        `;
+                        contenedor.appendChild(tarjeta);
+                    });
+                }
+            } catch (error) {
+                console.error("Error de conexión:", error);
+            }
+        }
+
+        function actualizarTextoMemoria(index, campo, valor) {
+            memoriaLocalNoticias[index][campo] = valor.trim();
+        }
+
+        // COMPRESOR AUTOMÁTICO COMERCIAL: Evita que fotos pesadas congelen el botón de publicar
+        function procesarYComprimirFoto(evento, index) {
+            const archivo = evento.target.files[0];
+            if (!archivo) return;
+
+            const lector = new FileReader();
+            lector.onload = function(e) {
+                const imgElemento = new Image();
+                imgElemento.src = e.target.result;
+                
+                imgElemento.onload = function() {
+                    const lienzo = document.createElement("canvas");
+                    const maximoAncho = 1200; // Tamaño óptimo comercial para pantallas de prensa
+                    let anchoOriginal = imgElemento.width;
+                    let altoOriginal = imgElemento.height;
+
+                    if (anchoOriginal > maximoAncho) {
+                        altoOriginal *= maximoAncho / anchoOriginal;
+                        anchoOriginal = maximoAncho;
+                    }
+
+                    lienzo.width = anchoOriginal;
+                    lienzo.height = altoOriginal;
+                    const contexto = lienzo.getContext("2d");
+                    contexto.drawImage(imgElemento, 0, 0, anchoOriginal, altoOriginal);
+
+                    // Comprime la foto al 70% de calidad para que pese muy poco pero mantenga las letras nítidas
+                    const fotoComprimidaBase64 = lienzo.toDataURL("image/jpeg", 0.7);
+
+                    document.getElementById(`img-${index}`).src = fotoComprimidaBase64;
+                    memoriaLocalNoticias[index].nueva_imagen_base64 = fotoComprimidaBase64;
+                    memoriaLocalNoticias[index].nueva_imagen_nombre = archivo.name.replace(/\.[^/.]+$/, "") + ".jpg";
+                };
+            };
+            lector.readAsDataURL(archivo);
+        }
+
+        async function guardarTodoElPeriodico() {
+            const boton = document.querySelector(".boton-guardar-cambios");
+            const textoOriginal = boton.innerText;
+            boton.innerText = "Sincronizando con la Nube... Por favor espere";
+            boton.style.backgroundColor = "#7f8c8d";
+            boton.disabled = true;
+
+            try {
+                for (let noticia of memoriaLocalNoticias) {
+                    const payload = {
+                        id: noticia.id || 1,
+                        titulo: noticia.titulo,
+                        subtitulo: noticia.subtitulo,
+                        texto: noticia.texto,
+                        imagen_url: noticia.imagen_url || "",
+                        imagen_base64: noticia.nueva_imagen_base64 || null,
+                        imagen_nombre: noticia.nueva_imagen_nombre || null
+                    };
+
+                    const respuesta = await fetch(API_URL, {
+                        method: "POST",
+                        mode: "cors", // Cambiado a CORS estable
+                        headers: { "Content-Type": "text/plain" }, // Evita pre-vuelos OPTIONS de seguridad estrictos
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    const resultado = await respuesta.json();
+                    if(resultado.status === "error") {
+                        throw new Error(resultado.message);
+                    }
+                }
+                alert("¡Éxito Comercial! El periódico se ha actualizado y publicado correctamente.");
+                location.reload();
+            } catch (error) {
+                alert("Surgió un detalle al guardar los cambios: " + error.message);
+            } finally {
+                boton.innerText = textoOriginal;
+                boton.style.backgroundColor = "#c9252c";
+                boton.disabled = false;
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", cargarInterfazEditora);
+    </script>
+</body>
+</html>
