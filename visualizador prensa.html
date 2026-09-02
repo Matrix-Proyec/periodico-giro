@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Diario Comercial - Periódico Digital</title>
+    <link rel="stylesheet" href="estilos.css">
+    
+   <style>
+       :root {
+    --primario: #1a1a1a;
+    --secundario: #c9252c;
+    --gris-claro: #f4f4f4;
+    --texto: #333333;
+}
+
+body {
+    font-family: 'Playfair Display', Georgia, serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: var(--texto);
+}
+
+header {
+    background-color: var(--primario);
+    color: white;
+    text-align: center;
+    padding: 30px 10px;
+    border-bottom: 5px solid var(--secundario);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.contenedor {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* Rejilla de noticias comercial */
+.noticias-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.tarjeta-noticia {
+    background: white;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Contenedor de Imagen de Noticia */
+.noticia-imagen-wrapper {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    background-color: #eaeaea;
+    cursor: pointer;
+}
+
+.noticia-imagen-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.noticia-imagen-wrapper:hover img {
+    transform: scale(1.03);
+}
+
+.noticia-cuerpo {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.noticia-titulo {
+    font-size: 1.4rem;
+    margin: 0 0 10px 0;
+    color: var(--primario);
+    line-height: 1.2;
+}
+
+.noticia-subtitulo {
+    font-size: 1rem;
+    color: #666;
+    margin: 0 0 15px 0;
+    font-style: italic;
+}
+
+.noticia-texto {
+    font-family: Arial, sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #444;
+}
+
+/* SISTEMA LIGHTBOX COMERCIAL (Página Pública) */
+.modal-flotante {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+}
+
+.imagen-ampliada {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    border-radius: 4px;
+    cursor: zoom-in;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Estado de Zoom Activo al presionar */
+.imagen-ampliada:active {
+    transform: scale(1.8);
+    cursor: zoom-out;
+}
+
+.boton-cerrar {
+    position: absolute;
+    top: 25px;
+    right: 35px;
+    color: #ffffff;
+    font-size: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+}
+
+.boton-cerrar:hover {
+    color: var(--secundario);
+}
+
+/* CONTROLES EXCLUSIVOS DE LA INTERFAZ EDITORA */
+.editor-input-file {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.indicador-subida {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-family: sans-serif;
+    border-radius: 3px;
+    pointer-events: none;
+}
+
+.editable-text:hover {
+    background-color: #fffde7;
+    outline: 2px dashed var(--secundario);
+}
+
+.boton-guardar-cambios {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: var(--secundario);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 10000;
+}
+
+.boton-guardar-cambios:hover {
+    background-color: #ad1d23;
+}
+
+
+
+
+ .item footer {
+      font-size: 0.8rem;
+      color: #666;
+      padding: 0 1rem 0.8rem;
+      text-align: right;
+    }
+    footer.site-footer {
+      background-color: #222;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      user-select: none;
+    }
+       
+   </style>
+    
+    
+</head>
+<body>
+
+    <header>
+        <h1>GIRO</h1>
+        <p style="margin:5px 0 0 0; font-family:sans-serif; letter-spacing:1px; color:#bbb;">El círculo de la información veraz</p>
+    </header>
+
+    <div class="contenedor">
+        <!-- Rejilla Dinámica donde se inyectan las noticias -->
+        <div id="contenedorNoticias" class="noticias-grid">
+            <p style="text-align: center; grid-column: 1/-1;">Cargando las últimas noticias...</p>
+        </div>
+    </div>
+
+    <!-- SISTEMA LIGHTBOX REQUERIDO -->
+    <div id="lightboxModal" class="modal-flotante">
+        <span id="cerrarLightbox" class="boton-cerrar">&times;</span>
+        <img id="imagenLightboxAmpliada" class="imagen-ampliada" src="" alt="Prensa Ampliada">
+              
+    </div>
+<Center>
+<footer class="site-footer" role="contentinfo">
+    &copy; Gabriel 2026
+  </footer>
+
+
+    <script>
+        // REEMPLAZA CON LA URL DE TU WEB APP DE APPS SCRIPT
+        const API_URL = "https://script.google.com/macros/s/AKfycbw7tIdTnPDNgEs97bC_n8n11qqzKNgYU6TE0guFp-ZfddG1tUSPraWBMcMWD_cFoOWU3Q/exec";
+
+        // Cargar datos desde Google Sheets al iniciar la página
+        async function cargarNoticiasPublicas() {
+            try {
+                const respuesta = await fetch(API_URL);
+                const resultado = await respuesta.json();
+                
+                if(resultado.status === "success") {
+                    const contenedor = document.getElementById("contenedorNoticias");
+                    contenedor.innerHTML = ""; // Limpiar mensaje de carga
+                    
+                    resultado.data.forEach(noticia => {
+                        const tarjeta = document.createElement("article");
+                        tarjeta.className = "tarjeta-noticia";
+                        tarjeta.innerHTML = `
+                            <div class="noticia-imagen-wrapper" onclick="abrirLightbox('${noticia.imagen_url}')">
+                                <img src="${noticia.imagen_url || 'https://placeholder.com'}" alt="Foto Noticia">
+                            </div>
+                            <div class="noticia-cuerpo">
+                                <h2 class="noticia-titulo">${noticia.titulo}</h2>
+                                <h3 class="noticia-subtitulo">${noticia.subtitulo}</h3>
+                                <p class="noticia-texto">${noticia.texto}</p>
+                            </div>
+                        `;
+                        contenedor.appendChild(tarjeta);
+                    });
+                }
+            } catch (error) {
+                console.error("Error al cargar noticias:", error);
+            }
+        }
+
+        // Lógica de Control de Imagen Flotante Inteligente
+        const modal = document.getElementById("lightboxModal");
+        const imgAmpliada = document.getElementById("imagenLightboxAmpliada");
+        const btnCerrar = document.getElementById("cerrarLightbox");
+
+        function abrirLightbox(src) {
+            if(!src || src.includes('placeholder')) return;
+            modal.style.display = "flex";
+            imgAmpliada.src = src;
+        }
+
+        btnCerrar.addEventListener("click", () => {
+            modal.style.display = "none";
+        });
+
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+
+        // Ejecutar carga automática al abrir la web
+        window.addEventListener("DOMContentLoaded", cargarNoticiasPublicas);
+    </script>
+</body>
+</html>
