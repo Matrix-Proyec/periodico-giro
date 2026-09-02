@@ -1,0 +1,403 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edición visual de prensa</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            /* Imagen de fondo profesional sobre comunicación con capa oscura comercial */
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.85)), 
+                        url('https://unsplash.com') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #ffffff;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Banner de cobro superior fino, elegante y profesional */
+        .top-billing-banner {
+            width: 100%;
+            background: linear-gradient(90deg, #ff3333, #bd0000);
+            color: #ffffff;
+            text-align: center;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            display: none; /* Se activa dinámicamente por código */
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        .header-container {
+            text-align: center;
+            padding-top: 40px;
+            padding-bottom: 10px;
+        }
+
+        .header-container h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+            margin-bottom: 8px;
+        }
+
+        .header-container p {
+            font-size: 1.15rem;
+            color: #d1d5db;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 40px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .card-title {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #00bcff;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #e5e7eb;
+        }
+
+        .form-group input, .password-wrapper input {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s ease;
+        }
+
+        .form-group input:focus, .password-wrapper input:focus {
+            border-color: #00bcff;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(0, 188, 255, 0.2);
+        }
+
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .password-wrapper input {
+            padding-right: 45px;
+        }
+
+        .toggle-password-btn {
+            position: absolute;
+            right: 14px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            color: #9ca3af;
+            transition: color 0.3s ease;
+            z-index: 10;
+        }
+
+        .toggle-password-btn:hover {
+            color: #00bcff;
+        }
+
+        .toggle-password-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #00bcff;
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 188, 255, 0.3);
+        }
+
+        .btn-submit:hover {
+            background: #009ad4;
+            transform: translateY(-1px);
+        }
+
+        /* Bloque estético de suspensión propuesto por ti para sustituir al botón */
+        .suspended-notice-block {
+            width: 100%;
+            background: rgba(255, 51, 51, 0.15);
+            border: 1px solid rgba(255, 51, 51, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            color: #ff8888;
+            font-size: 0.95rem;
+            font-weight: 600;
+            line-height: 1.4;
+            box-shadow: inset 0 0 10px rgba(255,51,51,0.1);
+            display: none; /* Aparece en lugar del botón si el estado es SUSPENDIDO */
+        }
+
+        .message {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            min-height: 20px;
+        }
+
+        footer {
+            background: rgba(10, 12, 16, 0.95);
+            padding: 25px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            width: 100%;
+        }
+
+        .dev-info {
+            font-size: 0.95rem;
+            color: #9ca3af;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .dev-info a {
+            color: #00bcff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .copyright {
+            font-size: 0.85rem;
+            color: #4b5563;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Banner superior inteligente de aviso preventivo de pago -->
+    <div class="top-billing-banner" id="billing-banner">
+        Aviso de Facturación: El pago del alquiler mensual del servicio ($10 USD) se encuentra pendiente.
+    </div>
+
+    <!-- Encabezado corporativo requerido -->
+    <div class="header-container">
+        <h1>Edición visual de prensa</h1>
+        <p>Edita tu prensa rápido y seguro</p>
+    </div>
+
+    <!-- Espacio del Formulario de Entrada Inteligente -->
+    <div class="main-content">
+        <div class="auth-card">
+            <!-- El título cambiará por código a "Configurar Dueño" si la base de datos está vacía -->
+            <div class="card-title" id="form-card-title">Cargando Sistema...</div>
+
+            <form id="auth-form" onsubmit="handleSubmit(event)" autocomplete="off">
+                <div class="form-group">
+                    <label for="username">Nombre de Usuario</label>
+                    <input type="text" id="username" required placeholder="Ingresa tu usuario" autocomplete="username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" required placeholder="••••••••" autocomplete="current-password">
+                        <button type="button" class="toggle-password-btn" id="toggle-eye-btn" onclick="togglePasswordVisibility()" aria-label="Mostrar contraseña">
+                            <svg id="eye-icon" viewBox="0 0 24 24">
+                                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- ESPACIO DE ACCIÓN DE ENTRADA: Botón Real o Bloqueo por Suscripción -->
+                <button type="submit" class="btn-submit" id="submit-btn" style="display: none;">Ingresar al Sistema</button>
+                
+                <div class="suspended-notice-block" id="suspended-block">
+                    ⚠️ Servicio suspendido temporalmente por falta de pago ($10 USD/mes).<br>
+                    Comuníquese de inmediato con Soporte Técnico.
+                </div>
+
+                <div class="message" id="response-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Pies de página requeridos estructurados comercialmente -->
+    <footer>
+        <div class="dev-info">
+            Para más información comunícate con el desarrollador de esta página. Soporte Técnico: <a href="mailto:yasiukmercalito@gmail.com">yasiukmercalito@gmail.com</a>
+        </div>
+        <div class="copyright">
+            &copy; RJ-PRODUCIÓN 2026 Derecho al autor
+        </div>
+    </footer>
+        <script>
+        // =========================================================================
+        // CONFIGURACIÓN CENTRALIZADA: PEGA TU URL DE APPS SCRIPT AQUÍ UNA SOLA VEZ
+        // =========================================================================
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzcdbLn9OdT961OOTp-i-Yd63kFV88gVA58tXRT3osMq9xCNhLYybh10NYNRCtzE6HP/exec"; 
+        // =========================================================================
+
+        let currentMode = "login"; // Cambiará a "setup" si la hoja de cálculo está vacía
+
+        // Ejecución inmediata al abrir la página web para comprobar el estado real de la cuenta
+        window.addEventListener('DOMContentLoaded', () => {
+            checkSystemStatus();
+        });
+
+        function checkSystemStatus() {
+            const cardTitle = document.getElementById('form-card-title');
+            const submitBtn = document.getElementById('submit-btn');
+            const suspendedBlock = document.getElementById('suspended-block');
+            const billingBanner = document.getElementById('billing-banner');
+            const responseMessage = document.getElementById('response-message');
+
+            // Consultar de forma remota el estado de seguridad y facturación en Google Sheets
+            fetch(`${WEB_APP_URL}?action=checkStatus`)
+                .then(response => response.json())
+                .then(data => {
+                    // 1. Evaluar estado de facturación mensual ($10)
+                    if (data.serviceStatus === "SUSPENDIDO") {
+                        billingBanner.style.display = "block";
+                        suspendedBlock.style.display = "block";
+                        submitBtn.style.display = "none"; // Desaparece físicamente el botón
+                        cardTitle.innerText = "Acceso Restringido";
+                        return;
+                    }
+
+                    // 2. Evaluar si la base de datos está vacía para el Registro Único del Dueño
+                    if (data.hasUser === false) {
+                        currentMode = "setup";
+                        cardTitle.innerText = "Configurar Administrador Único";
+                        submitBtn.innerText = "Registrar y Asegurar Cuenta";
+                        submitBtn.style.display = "block";
+                        responseMessage.style.color = "#00bcff";
+                        responseMessage.innerText = "El sistema detectó que está libre. Configure su clave privada.";
+                    } else {
+                        currentMode = "login";
+                        cardTitle.innerText = "Control de Acceso";
+                        submitBtn.innerText = "Ingresar al Sistema";
+                        submitBtn.style.display = "block";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error de conexión:', error);
+                    cardTitle.innerText = "Error de Servidor";
+                    responseMessage.style.color = "#FF3333";
+                    responseMessage.innerText = "No se pudo sincronizar la base de datos en la nube.";
+                });
+        }
+
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.innerHTML = '<path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.82l2.92 2.92c1.51-1.26 2.7-2.89 3.44-4.74-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16c.56-.23 1.17-.36 1.82-.36zm0-4.5c-5 0-9.27 3.11-11 7.5 1.21 3.08 3.75 5.56 6.94 6.74l1.37-1.37C6.6 14.39 4.3 12.03 3.32 12c.98-.03 3.28-2.39 6.01-3.37L7.4 6.7C6.16 7.15 4.82 7.4 3.42 7.4zm5.55 11.41l-1.46-1.46C14.7 12.18 13.4 11 12 11c-.34 0-.66.07-.97.18L9.34 9.49c.72-.48 1.58-.74 2.66-.74 2.76 0 5 2.24 5 5 0 1.08-.26 1.94-.74 2.66zm-5.22.42l1.42 1.42c-.54.22-1.13.35-1.75.35-2.76 0-5-2.24-5-5 0-.62.13-1.21.35-1.75l1.42 1.42c-.11.21-.18.44-.18.68 0 1.66 1.34 3 3 3 .24 0 .47-.07.68-.18zM2 4.27l2.28 2.28.46.46 12.28 12.28.46.46L19 21.43l-1.41 1.41-2.83-2.83C13.56 20.36 12.8 20.5 12 20.5c-5 0-9.27-3.11-11-7.5.78-1.99 2.12-3.69 3.82-4.91L2.01 5.27 2 4.27z"/>';
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.innerHTML = '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>';
+            }
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            const messageDiv = document.getElementById('response-message');
+
+            messageDiv.innerText = "Procesando solicitud de acceso...";
+            messageDiv.style.color = "#00bcff";
+
+            const url = `${WEB_APP_URL}?action=${currentMode}&user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        messageDiv.style.color = "#00FF66";
+                        messageDiv.innerText = data.message;
+                        
+                        if (currentMode === "setup") {
+                            // Si se acaba de registrar, recarga la interfaz para aplicar el candado eterno de inmediato
+                            setTimeout(() => { location.reload(); }, 1500);
+                        } else {
+                            // Redirección directa hacia la página 2 del periódico
+                            setTimeout(() => { window.location.href = "page2.html"; }, 1200);
+                        }
+                    } else {
+                        messageDiv.style.color = "#FF3333";
+                        messageDiv.innerText = data.message;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    messageDiv.style.color = "#FF3333";
+                    messageDiv.innerText = "Error crítico de envío hacia el servidor.";
+                });
+        }
+    </script>
+</body>
+</html>
