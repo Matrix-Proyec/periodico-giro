@@ -229,6 +229,36 @@ header h1 {
        
         h1 { color: #ffffff; margin-bottom: 20px; }
         a { color: #cfd8dc; text-decoration: none; display: inline-block; margin-top: 20px; }
+        
+        
+        
+        
+        footer {
+            background: rgba(10, 10, 16, 0.95);
+            padding: 15px 1px;
+            text-align: center;
+            border-top: 5px solid rgba(255,255,255,0.08);
+            width: 100%;
+        }
+        
+         .dev-info {
+            font-size: 0.90rem;
+            color: #9ca3af;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .dev-info a {
+            color: #00bcff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .copyright {
+            font-size: 0.85rem;
+            color: #4b5563;
+            letter-spacing: 0.5px;
+        }
    </style>
     
     
@@ -256,10 +286,53 @@ header h1 {
         <img id="imagenLightboxAmpliada" class="imagen-ampliada" src="" alt="Prensa Ampliada">
               
     </div>
-<Center>
-<footer class="site-footer" role="contentinfo">
-    &copy; Gabriel 2026
-  </footer>
+    
+    
+    <!-- CONTENEDOR COMERCIAL DE INTERACCIÓN PÚBLICA CON APODOS -->
+<div id="comunidad-chat" style="max-width: 480px; margin: 20px auto; padding: 20px; border-radius: 16px; background: #ffffff; box-shadow: 0 10px 25px rgba(0,0,0,0.08); font-family: -apple-system, BlinkMacSystemFont, sans-serif; border: 1px solid #f0f0f0; box-sizing: border-box;">
+  
+  <!-- Barra Superior de Reacciones -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1.5px solid #f5f5f5;">
+    <span style="font-weight: bold; font-size: 0.95rem; color: #222; text-transform: uppercase; letter-spacing: 0.5px;">💬 Chat de Lectores</span>
+    
+    <div style="display: flex; gap: 8px;">
+      <button id="btn-corazon" onclick="reaccionar('Corazon')" style="background: #fff0f3; color: #ff3366; border: none; padding: 6px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 4px;">
+        ❤️ <span id="txt-corazones">0</span>
+      </button>
+      <button id="btn-guino" onclick="reaccionar('Guino')" style="background: #fef9e7; color: #f1c40f; border: none; padding: 6px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 4px;">
+        😉 <span id="txt-guinos">0</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Historial de Chat Estilo Comercial -->
+  <div id="historial-chat" style="height: 220px; overflow-y: auto; background: #f8f9fa; border: 1px solid #edf2f7; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
+    <p style="color: #a0aec0; text-align: center; font-size: 0.85rem; margin: auto 0;">Cargando mensajes en vivo...</p>
+  </div>
+
+  <!-- Formulario de Entrada con Apodo y Mensaje -->
+  <div style="display: flex; flex-direction: column; gap: 8px;">
+    
+    <!-- Campo para el Apodo (Compacto) -->
+    <input type="text" id="apodo-usuario" placeholder="Escribe tu apodo" maxlength="15" style="width: 100%; padding: 8px 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.85rem; outline: none; box-sizing: border-box;" onfocus="this.style.borderColor='#3182ce'">
+    
+    <!-- Campo de Mensaje + Botón alineados horizontalmente -->
+    <div style="display: flex; gap: 8px; width: 100%;">
+      <input type="text" id="mensaje-usuario" placeholder="Escribe un comentario público..." maxlength="100" style="flex-grow: 1; min-width: 0; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.9rem; outline: none;" onfocus="this.style.borderColor='#3182ce'">
+      <button onclick="enviarMensajeChat()" style="background: #3182ce; color: white; border: none; padding: 0 16px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; white-space: nowrap;">Enviar</button>
+    </div>
+    
+  </div>
+</div>
+    
+<footer>
+        <div class="dev-info">
+            Para más información comunícate con el desarrollador de esta página. Soporte Técnico: <a href="mailto:yasiukmercalito@gmail.com">yasiukmercalito@gmail.com</a>
+        </div>
+        <div class="copyright">
+            &copy; RJ-PRODUCIÓN 2026
+        </div>
+    </footer>
 
 
     <script>
@@ -320,6 +393,74 @@ header h1 {
 
         // Ejecutar carga automática al abrir la web
         window.addEventListener("DOMContentLoaded", cargarNoticiasPublicas);
+        
+        
+        
+        // ⚠️ ENLACE OBLIGATORIO: PEGA AQUÍ LA URL DE TU NUEVA APP WEB DE CHAT (/exec)
+  const URL_NUEVO_CHAT = "https://script.google.com/macros/s/AKfycbxX45PypgI66fJTxpb1YtOM83IskVk1r0Uv8N6MIsJTQu8Unu0n0NtwW4Z-MBh2tW8s/exec";
+
+  document.addEventListener("DOMContentLoaded", function() {
+    actualizarChatContinuo();
+    // Consulta automatizada cada 7 segundos para simular tiempo real de forma eficiente
+    setInterval(actualizarChatContinuo, 7000);
+  });
+
+  function actualizarChatContinuo() {
+    fetch(URL_NUEVO_CHAT + "?peticion=leer")
+      .then(res => res.json())
+      .then(function(datos) {
+        document.getElementById('txt-corazones').innerText = datos.totalCorazones || 0;
+        document.getElementById('txt-guinos').innerText = datos.totalGuinos || 0;
+        
+        var caja = document.getElementById('historial-chat');
+        caja.innerHTML = "";
+        
+        if(!datos.listaComentarios || datos.listaComentarios.length === 0) {
+          caja.innerHTML = '<p style="color: #a0aec0; text-align: center; font-size: 0.85rem; margin: auto 0;">No hay mensajes aún. ¡Sé el primero!</p>';
+          return;
+        }
+        
+        datos.listaComentarios.forEach(function(item) {
+          caja.innerHTML += `
+            <div style="background: white; padding: 8px 12px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.9rem; box-shadow: 0 1px 3px rgba(0,0,0,0.02); word-break: break-word;">
+              <span style="color: #2b6cb0; font-weight: bold; font-size: 0.8rem; display: block; margin-bottom: 2px;">@${item.usuario}</span>
+              <span style="color: #2d3748;">${item.mensaje}</span>
+            </div>`;
+        });
+        caja.scrollTop = caja.scrollHeight; // Auto-scroll al último mensaje recibido
+      })
+      .catch(err => console.error("Error leyendo comunidad:", err));
+  }
+
+  function reaccionar(tipoEmoji) {
+    var btn = tipoEmoji === 'Corazon' ? document.getElementById('btn-corazon') : document.getElementById('btn-guino');
+    btn.disabled = true;
+    
+    // Al reaccionar, pasamos un apodo genérico "Reacción" para mantener limpia la base de datos
+    fetch(`${URL_NUEVO_CHAT}?peticion=guardar&tipo=${tipoEmoji}&contenido=1&apodo=Reaccion`)
+      .then(() => {
+        actualizarChatContinuo();
+        btn.disabled = false;
+      })
+      .catch(() => btn.disabled = false);
+  }
+
+  function enviarMensajeChat() {
+    var inputApodo = document.getElementById('apodo-usuario');
+    var inputMsg = document.getElementById('mensaje-usuario');
+    
+    var apodo = inputApodo.value.trim().replace(/[^a-zA-Z0-9_]/g, ""); // Limpia caracteres raros del apodo
+    var texto = inputMsg.value.trim();
+    
+    if(texto === "") return;
+    if(apodo === "") apodo = "Lector_Anonimo";
+
+    inputMsg.value = ""; // Limpieza de interfaz instantánea para dar agilidad al usuario
+    
+    fetch(`${URL_NUEVO_CHAT}?peticion=guardar&tipo=Comentario&contenido=${encodeURIComponent(texto)}&apodo=${encodeURIComponent(apodo)}`)
+      .then(() => actualizarChatContinuo());
+  }
+           
     </script>
 </body>
 </html>
