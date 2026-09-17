@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hemeroteca - Archivo Histórico de Ediciones Pasadas</title>
+    <style>
+        /* =========================================================================
+           ESTILOS PROFESIONALES DE LA HEMEROTECA (ADAPTADO A MÓVILES)
+           ========================================================================= */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f7fafc; color: #2d3748; }
+        header { background-color: #8b4513; padding: 20px; text-align: center; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        header h1 { margin: 0; font-size: 1.6rem; }
+        header p { margin: 5px 0 0 0; font-size: 0.9rem; opacity: 0.9; }
+        
+        .contenedor-herramientas { max-width: 600px; margin: 20px auto; padding: 0 15px; display: flex; flex-direction: column; gap: 15px; align-items: center; }
+        
+        .btn-retorno { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background-color: white; color: #8b4513; border: 2px solid #8b4513; font-weight: bold; border-radius: 6px; cursor: pointer; text-decoration: none; transition: all 0.2s; font-size: 0.9rem; }
+        .btn-retorno:hover { background-color: #8b4513; color: white; }
+        
+        .selector-historico { width: 100%; max-width: 320px; padding: 10px; font-size: 0.95rem; font-weight: bold; color: #2d3748; border: 2px solid #cbd5e0; border-radius: 6px; outline: none; text-align-last: center; cursor: pointer; }
+        
+        #contenedorGaleriaHistorica { max-width: 1200px; margin: 20px auto; padding: 0 15px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        
+        .tarjeta-historica { background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .imagen-wrapper-historico { position: relative; cursor: pointer; overflow: hidden; }
+        .imagen-wrapper-historico img { width: 100%; display: block; height: auto; }
+        
+        .banner-lupa-historico { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0, 0, 0, 0.65); color: #fff; text-align: center; padding: 6px 0; font-size: 0.75rem; font-weight: bold; }
+        
+        .cuerpo-historico { padding: 12px; }
+        .cuerpo-historico h2 { font-size: 1rem; margin: 0 0 5px 0; color: #2d3748; }
+        .cuerpo-historico p { font-size: 0.85rem; color: #718096; margin: 0; line-height: 1.4; }
+
+        /* ESTILOS DEL LIGHTBOX MODAL COMPLETO */
+        .lightbox-modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); align-items: center; justify-content: center; }
+        .lightbox-contenido { max-width: 95%; max-height: 85%; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+        .lightbox-cerrar { position: absolute; top: 20px; right: 25px; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; transition: color 0.2s; user-select: none; }
+        .lightbox-cerrar:hover { color: #cbd5e0; }
+    </style>
+</head>
+<body>
+
+    <!-- CABECERA DE LA HEMEROTECA -->
+    <header>
+        <h1>🏛️ Hemeroteca Digital</h1>
+        <p>Consulta las ediciones y publicaciones anteriores del periódico</p>
+    </header>
+
+    <!-- BARRA DE HERRAMIENTAS -->
+    <div class="contenedor-herramientas">
+        <!-- BOTÓN DE REGRESO AL PERIÓDICO PRINCIPAL -->
+        <a href="pagina2.html" class="btn-retorno">◀ Volver al Periódico Actual</a>
+        
+        <!-- SELECTOR DE FECHAS REALES -->
+        <select id="selectorHistoricoFechas" class="selector-historico" onchange="mostrarEdicionAntigua(this.value)">
+            <option value="">Cargando archivo de fechas...</option>
+        </select>
+    </div>
+
+    <!-- REJILLA DE IMÁGENES ANTIGUAS -->
+    <div id="contenedorGaleriaHistorica"></div>
+
+    <!-- LIGHTBOX PARA VER EN PANTALLA COMPLETA CON SU X -->
+    <div id="lightboxHistoricoModal" class="lightbox-modal">
+        <span class="lightbox-cerrar" onclick="cerrarLightboxHistorico()">&times;</span>
+        <img class="lightbox-contenido" id="imagenHistoricaAmpliada">
+    </div>
+
+    <script>
+        // TU URL DE API (Sigue intacta y compartida)
+        const API_URL = " https://script.google.com/macros/s/AKfycbw7tIdTnPDNgEs97bC_n8n11qqzKNgYU6TE0guFp-ZfddG1tUSPraWBMcMWD_cFoOWU3Q/exec";
+
+        let todasLasNoticias = [];
+        let edicionesAgrupadas = {};
+
+        async function cargarArchivoHistorico() {
+            try {
+                const respuesta = await fetch(API_URL);
+                const resultado = await respuesta.json();
+                
+                if(resultado.status === "success") {
+                    // Filtramos para ignorar celdas vacías u ocultas
+                    todasLasNoticias = resultado.data.filter(n => n.fecha && String(n.fecha).trim() !== "" && String(n.fecha).trim() !== "OCULTO");
+                    
+                    // Procesar y clasificar las fotos por sus fechas reales
+                    agruparPorFechasReales();
+                    renderizarMenuFechas();
+                }
+            } catch (error) {
+                console.error("Error al conectar con el archivo:", error);
+            }
+        }
+
+        // Agrupa las publicaciones en carpetas lógicas por día
+        function agruparPorFechasReales() {
+            edicionesAgrupadas = {};
+            
+            todasLasNoticias.forEach(noticia => {
+                let fTexto = String(noticia.fecha).trim();
+                let fechaLimpia = fTexto.includes(",") ? fTexto.split(",")[0].trim() : fTexto;
+                fechaLimpia = fechaLimpia.replace(/\//g, "-"); // Estandarizar a guiones
+                
+                if (!edicionesAgrupadas[fechaLimpia]) {
+                    edicionesAgrupadas[fechaLimpia] = [];
+                }
+                edicionesAgrupadas[fechaLimpia].push(noticia);
+            });
+        }
+
+        // Llena el selector únicamente con las fechas que existen en tu Excel
+        function renderizarMenuFechas() {
+            const selector = document.getElementById("selectorHistoricoFechas");
+            if (!selector) return;
+            selector.innerHTML = "";
+
+            // Ordenar fechas del pasado de más nueva a más antigua
+            let fechasOrdenadas = Object.keys(edicionesAgrupadas).sort((a, b) => {
+                let pA = a.split("-").map(Number);
+                let pB = b.split("-").map(Number);
+                return new Date(pB[2], pB[1] - 1, pB[0]) - new Date(pA[2], pA[1] - 1, pA[0]);
+            });
+
+            if (fechasOrdenadas.length === 0) {
+                selector.innerHTML = "<option>No hay historial disponible</option>";
+                return;
+            }
+
+            // Opción inicial informativa
+            let opcionDefecto = document.createElement("option");
+            opcionDefecto.value = "";
+            opcionDefecto.innerText = "🔍 Selecciona una Fecha Pasada";
+            selector.appendChild(opcionDefecto);
+
+            fechasOrdenadas.forEach(fecha => {
+                const opcion = document.createElement("option");
+                opcion.value = fecha;
+                opcion.innerText = `📅 Edición del: ${fecha}`;
+                selector.appendChild(opcion);
+            });
+        }
+
+        // Despliega todas las fotos que correspondan al día seleccionado
+        function mostrarEdicionAntigua(fechaSeleccionada) {
+            const contenedor = document.getElementById("contenedorGaleriaHistorica");
+            if (!contenedor) return;
+            contenedor.innerHTML = "";
+
+            if (!fechaSeleccionada) return;
+
+            const noticiasDeEstaFecha = edicionesAgrupadas[fechaSeleccionada] || [];
+
+            noticiasDeEstaFecha.forEach(noticia => {
+                const tarjeta = document.createElement("div");
+                tarjeta.className = "tarjeta-historica";
+                
+                const urlImagen = noticia.imagen_url || 'img/logo.jpg';
+
+                tarjeta.innerHTML = `
+                    <div class="imagen-wrapper-historico" onclick="abrirLightboxHistorico('${urlImagen}')">
+                        <img src="${urlImagen}" alt="Foto Archivo">
+                        <!-- ICONO DE LUPA Y AVISO DE AMPLIACIÓN COMPLETO -->
+                        <div class="banner-lupa-historico">
+                            🔍 Clic para ampliar imagen
+                        </div>
+                    </div>
+                    <div class="cuerpo-historico">
+                        <h2>${noticia.titulo || "Sin Título"}</h2>
+                        <p>${noticia.texto || ""}</p>
+                    </div>
+                `;
+                contenedor.appendChild(tarjeta);
+            });
+        }
+
+        // SISTEMA LIGHTBOX DEL HISTÓRICO CON SU RESPECTIVA X
+        const modalHistorico = document.getElementById("lightboxHistoricoModal");
+        const imgHistoricaAmpliada = document.getElementById("imagenHistoricaAmpliada");
+
+        function abrirLightboxHistorico(src) {
+            if(!src) return;
+            modalHistorico.style.display = "flex";
+            imgHistoricaAmpliada.src = src;
+        }
+
+        function cerrarLightboxHistorico() {
+            modalHistorico.style.display = "none";
+        }
+
+        // Cerrar si hace clic fuera de la foto
+        modalHistorico.addEventListener("click", (e) => {
+            if (e.target === modalHistorico) {
+                cerrarLightboxHistorico();
+            }
+        });
+
+        window.addEventListener("DOMContentLoaded", cargarArchivoHistorico);
+    </script>
+</body>
+</html>

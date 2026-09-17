@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Diario Comercial - Periódico Digital</title>
+    <link rel="stylesheet" href="estilos.css">
+    
+   <style>
+       :root {
+    --primario: #1a1a1a;
+    --secundario: #c9252c;
+    --gris-claro: #f4f4f4;
+    --texto: #333333;
+}
+
+body {
+    font-family: 'Playfair Display', Georgia, serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: var(--texto);
+}
+
+header {
+    background-color: var(--primario);
+    color: white;
+    text-align: center;
+    padding: 30px 10px;
+    border-bottom: 5px solid var(--secundario);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.contenedor {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* Rejilla de noticias comercial */
+.noticias-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.tarjeta-noticia {
+    background: white;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Contenedor de Imagen de Noticia */
+.noticia-imagen-wrapper {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    background-color: #eaeaea;
+    cursor: pointer;
+}
+
+.noticia-imagen-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.noticia-imagen-wrapper:hover img {
+    transform: scale(1.03);
+}
+
+.noticia-cuerpo {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.noticia-titulo {
+    font-size: 1.4rem;
+    margin: 0 0 10px 0;
+    color: var(--primario);
+    line-height: 1.2;
+}
+
+.noticia-subtitulo {
+    font-size: 1rem;
+    color: #666;
+    margin: 0 0 15px 0;
+    font-style: italic;
+}
+
+.noticia-texto {
+    font-family: Arial, sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #444;
+}
+
+/* SISTEMA LIGHTBOX COMERCIAL (Página Pública) */
+.modal-flotante {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+}
+
+.imagen-ampliada {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    border-radius: 4px;
+    cursor: zoom-in;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Estado de Zoom Activo al presionar */
+.imagen-ampliada:active {
+    transform: scale(1.8);
+    cursor: zoom-out;
+}
+
+.boton-cerrar {
+    position: absolute;
+    top: 25px;
+    right: 35px;
+    color: #ffffff;
+    font-size: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+}
+
+.boton-cerrar:hover {
+    color: var(--secundario);
+}
+
+/* CONTROLES EXCLUSIVOS DE LA INTERFAZ EDITORA */
+.editor-input-file {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.indicador-subida {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-family: sans-serif;
+    border-radius: 3px;
+    pointer-events: none;
+}
+
+.editable-text:hover {
+    background-color: #fffde7;
+    outline: 2px dashed var(--secundario);
+}
+
+.boton-guardar-cambios {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: var(--secundario);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 10000;
+}
+
+.boton-guardar-cambios:hover {
+    background-color: #ad1d23;
+}
+
+
+
+
+ .item footer {
+      font-size: 0.8rem;
+      color: #666;
+      padding: 0 1rem 0.8rem;
+      text-align: right;
+    }
+    footer.site-footer {
+      background-color: #222;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      user-select: none;
+    }
+       
+       
+       
+       
+       
+        h1 { color: #ffffff; margin-bottom: 20px; }
+        a { color: #cfd8dc; text-decoration: none; display: inline-block; margin-top: 20px; }
+        
+        
+        
+        
+        footer {
+            background: rgba(10, 10, 16, 0.95);
+            padding: 15px 1px;
+            text-align: center;
+            border-top: 5px solid rgba(255,255,255,0.08);
+            width: 100%;
+        }
+        
+         .dev-info {
+            font-size: 0.90rem;
+            color: #9ca3af;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .dev-info a {
+            color: #00bcff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .copyright {
+            font-size: 0.85rem;
+            color: #4b5563;
+            letter-spacing: 0.5px;
+        }
+        
+        
+        
+        
+        
+        
+   </style>
+    
+    
+</head>
+<body>
+
+    <header>
+        <h1>GIRO</h1>
+        <p style="margin:5px 0 0 0; font-family:sans-serif; letter-spacing:1px; color:#bbb;">El círculo de la información veraz</p>
+        <p>
+         <a href="index.html">← Volver al Login</a>
+        
+    </header>
+
+    <div class="contenedor">
+        <!-- Rejilla Dinámica donde se inyectan las noticias -->
+        <div id="contenedorNoticias" class="noticias-grid">
+            <p style="text-align: center; grid-column: 1/-1;">Cargando las últimas noticias...</p>
+        </div>
+    </div>
+
+    <!-- SISTEMA LIGHTBOX REQUERIDO -->
+    <div id="lightboxModal" class="modal-flotante">
+        <span id="cerrarLightbox" class="boton-cerrar">&times;</span>
+        <img id="imagenLightboxAmpliada" class="imagen-ampliada" src="" alt="Prensa Ampliada">
+              
+    </div>
+    
+    
+    <!-- CONTENEDOR COMERCIAL DE INTERACCIÓN PÚBLICA CON APODOS -->
+<div id="comunidad-chat" style="max-width: 480px; margin: 20px auto; padding: 20px; border-radius: 16px; background: #ffffff; box-shadow: 0 10px 25px rgba(0,0,0,0.08); font-family: -apple-system, BlinkMacSystemFont, sans-serif; border: 1px solid #f0f0f0; box-sizing: border-box;">
+  
+  <!-- Barra Superior de Reacciones -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1.5px solid #f5f5f5;">
+    <span style="font-weight: bold; font-size: 0.95rem; color: #222; text-transform: uppercase; letter-spacing: 0.5px;">💬 Chat de Lectores</span>
+    
+    <div style="display: flex; gap: 8px;">
+      <button id="btn-corazon" onclick="reaccionar('Corazon')" style="background: #fff0f3; color: #ff3366; border: none; padding: 6px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 4px;">
+        ❤️ <span id="txt-corazones">0</span>
+      </button>
+      <button id="btn-guino" onclick="reaccionar('Guino')" style="background: #fef9e7; color: #f1c40f; border: none; padding: 6px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 4px;">
+        😉 <span id="txt-guinos">0</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Historial de Chat Estilo Comercial -->
+  <div id="historial-chat" style="height: 220px; overflow-y: auto; background: #f8f9fa; border: 1px solid #edf2f7; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
+    <p style="color: #a0aec0; text-align: center; font-size: 0.85rem; margin: auto 0;">Cargando mensajes en vivo...</p>
+  </div>
+
+  <!-- Formulario de Entrada con Apodo y Mensaje -->
+  <div style="display: flex; flex-direction: column; gap: 8px;">
+    
+    <!-- Campo para el Apodo (Compacto) -->
+    <input type="text" id="apodo-usuario" placeholder="Escribe tu apodo" maxlength="15" style="width: 100%; padding: 8px 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.85rem; outline: none; box-sizing: border-box;" onfocus="this.style.borderColor='#3182ce'">
+    
+    <!-- Campo de Mensaje + Botón alineados horizontalmente -->
+    <div style="display: flex; gap: 8px; width: 100%;">
+      <input type="text" id="mensaje-usuario" placeholder="Escribe un comentario público..." maxlength="100" style="flex-grow: 1; min-width: 0; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.9rem; outline: none;" onfocus="this.style.borderColor='#3182ce'">
+      <button onclick="enviarMensajeChat()" style="background: #3182ce; color: white; border: none; padding: 0 16px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; white-space: nowrap;">Enviar</button>
+    </div>
+    
+  </div>
+</div>
+    
+<footer>
+        <div class="dev-info">
+            Para más información comunícate con el desarrollador de esta página. Soporte Técnico: <a href="mailto:yasiukmercalito@gmail.com">yasiukmercalito@gmail.com</a>
+        </div>
+        <div class="copyright">
+            &copy; RJ-PRODUCIÓN 2026
+        </div>
+    </footer>
+
+
+    <script>
+   
+
+        // =========================================================================
+        // 1. CONFIGURACIÓN DEL PERIÓDICO COMERCIAL DE 10 EN 10 (COMPLETO)
+        // =========================================================================
+        const API_URL = " https://script.google.com/macros/s/AKfycbw7tIdTnPDNgEs97bC_n8n11qqzKNgYU6TE0guFp-ZfddG1tUSPraWBMcMWD_cFoOWU3Q/exec";
+
+        let todasLasNoticias = [];
+        let paginaActual = 0;
+        const noticiasPorPagina = 10;
+
+        // Cargar datos desde Google Sheets al iniciar la página
+        async function cargarNoticiasPublicas() {
+            try {
+                const respuesta = await fetch(API_URL);
+                const resultado = await respuesta.json();
+                
+                if(resultado.status === "success") {
+                    // FILTRO DE SEGURIDAD: Ignora de golpe cualquier fila que el operador borró en el editor ("OCULTO")
+                    todasLasNoticias = resultado.data.filter(n => n.fecha && String(n.fecha).trim() !== "" && String(n.fecha).trim() !== "OCULTO");
+                    
+                    ponerLogoFondoEncabezado();
+                    iniciarRelojDigital();
+                    crearControlesNavegacionSup();
+                    
+                    // Pintar la pantalla limpia con tus fotos reales arriba
+                    renderizarPaginaNoticias();
+                }
+            } catch (error) {
+                console.error("Error al cargar noticias:", error);
+            }
+        }
+
+        // CAPA TRANSPARENTE: Coloca el logo de fondo tipo marca de agua detrás de tus textos
+        function ponerLogoFondoEncabezado() {
+            const encabezado = document.querySelector("header"); 
+            if (encabezado) {
+                const urlLogoEncabezado = "img/logo.jpg"; 
+                encabezado.style.position = "relative";
+                encabezado.style.backgroundImage = `linear-gradient(rgba(139, 69, 19, 0.85), rgba(139, 69, 19, 0.85)), url('${urlLogoEncabezado}')`;
+                encabezado.style.backgroundPosition = "center";
+                encabezado.style.backgroundRepeat = "no-repeat";
+                encabezado.style.backgroundSize = "contain";
+            }
+        }
+
+        // RELOJ DIGITAL EN VIVO: Formato 12 horas con AM/PM
+        function iniciarRelojDigital() {
+            const encabezado = document.querySelector("header");
+            if (!encabezado || document.getElementById("relojDigitalPrensa")) return;
+
+            const divReloj = document.createElement("div");
+            divReloj.id = "relojDigitalPrensa";
+            divReloj.style.cssText = "text-align: center; color: #fff; font-family: monospace; font-size: 1.1rem; font-weight: bold; margin-bottom: 10px;";
+            encabezado.appendChild(divReloj);
+
+            function actualizarHora() {
+                const ahora = new Date();
+                let horas = ahora.getHours();
+                const minutos = String(ahora.getMinutes()).padStart(2, '0');
+                const segundos = String(ahora.getSeconds()).padStart(2, '0');
+                const ampm = horas >= 12 ? 'PM' : 'AM';
+                
+                horas = horas % 12;
+                horas = horas ? horas : 12; 
+                
+                divReloj.innerText = `🕒 ${horas}:${minutos}:${segundos} ${ampm}`;
+            }
+            
+            actualizarHora();
+            setInterval(actualizarHora, 1000);
+        }
+
+        // CONTROLES SUPERIORES: Botones compactos móviles con LED verde de adorno parpadeante
+        function crearControlesNavegacionSup() {
+            const contenedorNoticias = document.getElementById("contenedorNoticias");
+            if (document.getElementById("barraNavegacionSuperior")) return;
+
+            const estilosLED = document.createElement("style");
+            estilosLED.innerHTML = `
+                @keyframes pulsoVerdeAdorno {
+                    0% { box-shadow: 0 0 4px #2ecc71; background-color: #2ecc71; }
+                    50% { box-shadow: 0 0 14px #2ecc71, 0 0 20px #2ecc71; background-color: #27ae60; }
+                    100% { box-shadow: 0 0 4px #2ecc71; background-color: #2ecc71; }
+                }
+                .led-adorno-vivido { animation: pulsoVerdeAdorno 1.4s infinite ease-in-out; }
+                .btn-nav-comercial { padding: 8px 16px; font-size: 0.85rem; font-weight: bold; color: #2d3748; background: #fff; border: 1px solid #cbd5e0; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+                .btn-nav-comercial:hover { background: #edf2f7; }
+                .btn-nav-comercial:disabled { background: #e2e8f0; color: #a0aec0; cursor: not-allowed; }
+            `;
+            document.head.appendChild(estilosLED);
+
+            const barraSup = document.createElement("div");
+            barraSup.id = "barraNavegacionSuperior";
+            barraSup.style.cssText = "display: flex; align-items: center; justify-content: center; gap: 15px; margin: 20px auto; max-width: 400px; padding: 0 15px;";
+            
+            barraSup.innerHTML = `
+                <button id="btnPrevSup" class="btn-nav-comercial" onclick="cambiarPagina(-1)">◀ Anterior</button>
+                <div class="led-adorno-vivido" style="width: 12px; height: 12px; background-color: #2ecc71; border-radius: 50%; flex-shrink: 0;"></div>
+                <button id="btnNextSup" class="btn-nav-comercial" onclick="cambiarPagina(1)">Siguiente ▶</button>
+            `;
+            
+            contenedorNoticias.parentNode.insertBefore(barraSup, contenedorNoticias);
+        }
+
+        // CONTROLES INFERIORES: Réplica exacta de botones limpios abajo
+        function crearControlesNavegacionInf() {
+            if (document.getElementById("barraNavegacionInferior")) return;
+            const contenedorNoticias = document.getElementById("contenedorNoticias");
+
+            const barraInf = document.createElement("div");
+            barraInf.id = "barraNavegacionInferior";
+            barraInf.style.cssText = "display: flex; align-items: center; justify-content: center; gap: 40px; margin: 30px auto 20px auto; max-width: 400px;";
+            
+            barraInf.innerHTML = `
+                <button id="btnPrevInf" class="btn-nav-comercial" onclick="cambiarPagina(-1)">◀ Anterior</button>
+                <button id="btnNextInf" class="btn-nav-comercial" onclick="cambiarPagina(1)">Siguiente ▶</button>
+            `;
+            
+            contenedorNoticias.parentNode.insertBefore(barraInf, contenedorNoticias.nextSibling);
+        }
+
+        // DIBUJAR PANTALLA SECUENCIAL DE 10 EN 10
+        function renderizarPaginaNoticias() {
+            const contenedor = document.getElementById("contenedorNoticias");
+            if (!contenedor) return;
+            contenedor.innerHTML = "";
+
+            const inicio = paginaActual * noticiasPorPagina;
+            let lote = todasLasNoticias.slice(inicio, inicio + noticiasPorPagina);
+
+            // AUTO-RELLENO DE LOGOS: Si faltan fotos en la última página, caen abajo al final
+            if (lote.length > 0 && lote.length < noticiasPorPagina) {
+                while (lote.length < noticiasPorPagina) {
+                    lote.push({ id: "relleno", titulo: "", subtitulo: "", texto: "", imagen_url: "" });
+                }
+            }
+
+            lote.forEach(noticia => {
+                const tarjeta = document.createElement("article");
+                tarjeta.className = "tarjeta-noticia";
+                
+                const logoPredeterminado = "img/logo.jpg"; 
+                const urlImagenFinal = (noticia.id === "relleno" || !noticia.imagen_url || noticia.imagen_url.trim() === "") 
+                    ? logoPredeterminado 
+                    : noticia.imagen_url;
+
+                const tituloFinal = noticia.id === "relleno" ? "Espacio Publicitario" : (noticia.titulo || "Sin Título");
+                const subtituloFinal = noticia.id === "relleno" ? "Prensa Comercial" : (noticia.subtitulo || "");
+                const textoFinal = noticia.id === "relleno" ? "Contenedor reservado para la siguiente actualización del periódico." : (noticia.texto || "");
+
+                tarjeta.innerHTML = `
+                    <div class="noticia-imagen-wrapper" onclick="abrirLightbox('${urlImagenFinal}')" style="position: relative; cursor: pointer; overflow: hidden;">
+                        <img src="${urlImagenFinal}" alt="Foto Noticia" style="width: 100%; display: block;">
+                        <div class="indicador-ampliar-banner" style="position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0, 0, 0, 0.6); color: #fff; text-align: center; padding: 5px 0; font-size: 0.75rem; font-weight: bold;">
+                            🔍 Clic para ampliar imagen
+                        </div>
+                    </div>
+                    <div class="noticia-cuerpo">
+                        <h2 class="noticia-titulo" style="font-size: 1.1rem; margin: 8px 0 4px 0;">${tituloFinal}</h2>
+                        <h3 class="noticia-subtitulo" style="font-size: 0.9rem; color: #718096; margin-bottom: 6px;">${subtituloFinal}</h3>
+                        <p class="noticia-texto" style="font-size: 0.85rem; line-height: 1.4;">${textoFinal}</p>
+                    </div>
+                `;
+                contenedor.appendChild(tarjeta);
+            });
+
+            // Solo dibuja la barra inferior si hay suficiente contenido para pasar la página
+            if (todasLasNoticias.length > noticiasPorPagina) {
+                crearControlesNavegacionInf();
+                actualizarEstadoBotones();
+            }
+        }
+
+            // CONTROL DE ACCIÓN DE BOTONES (SIN CONFIGURACIONES ERRÓNEAS)
+        function cambiarPagina(direccion) {
+            const nuevaPagina = paginaActual + direccion;
+            
+            if (nuevaPagina >= 0 && (nuevaPagina * noticiasPorPagina) < todasLasNoticias.length) {
+                paginaActual = nuevaPagina;
+                renderizarPaginaNoticias();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Sincronización perfecta del bloqueo de botones arriba y abajo
+        function actualizarEstadoBotones() {
+            const btnPrevSup = document.getElementById("btnPrevSup");
+            const btnNextSup = document.getElementById("btnNextSup");
+            const btnPrevInf = document.getElementById("btnPrevInf");
+            const btnNextInf = document.getElementById("btnNextInf");
+
+            const esPrimeraPag = paginaActual === 0;
+            const esUltimaPag = ((paginaActual + 1) * noticiasPorPagina) >= todasLasNoticias.length;
+
+            if (btnPrevSup) btnPrevSup.disabled = esPrimeraPag;
+            if (btnPrevInf) btnPrevInf.disabled = esPrimeraPag;
+            if (btnNextSup) btnNextSup.disabled = esUltimaPag;
+            if (btnNextInf) btnNextInf.disabled = esUltimaPag;
+        }
+
+        // =========================================================================
+        // 2. LÓGICA DE CONTROL DE IMAGEN FLOTANTE (LIGHTBOX ORIGINAL COMPLETADO)
+        // =========================================================================
+        const modal = document.getElementById("lightboxModal");
+        const imgAmpliada = document.getElementById("imagenLightboxAmpliada");
+        const btnCerrar = document.getElementById("cerrarLightbox");
+
+        function abrirLightbox(src) {
+            if(!src || src.includes('placeholder')) return;
+            modal.style.display = "flex";
+            imgAmpliada.src = src;
+        }
+
+        if(btnCerrar) {
+            btnCerrar.addEventListener("click", () => {
+                modal.style.display = "none";
+            });
+        }
+
+        if(modal) {
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) {
+                    modal.style.display = "none";
+                }
+            });
+        }
+
+        window.addEventListener("DOMContentLoaded", cargarNoticiasPublicas);
+    
+
+
+
+
+
+        // =========================================================================
+        // SINOPSIS DEL MENÚ FLOTANTE: ACCESO DIRECTO A LA HEMEROTECA DIGITAL
+        // =========================================================================
+        function crearMenuFlotanteHemeroteca() {
+            if (document.getElementById("btnMenuFlotanteHemeroteca")) return;
+
+            // Inyectar los estilos CSS necesarios en la cabecera de la página
+            const estilosMenu = document.createElement("style");
+            estilosMenu.innerHTML = `
+                .contenedor-menu-historico { position: fixed; bottom: 25px; left: 25px; z-index: 99999; display: flex; align-items: center; gap: 10px; font-family: sans-serif; }
+                .btn-hamburguesa-flotante { width: 56px; height: 56px; background-color: #8b4513; color: white; border: none; border-radius: 50%; font-size: 24px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+                .btn-hamburguesa-flotante:hover { background-color: #6f360f; transform: scale(1.05); }
+                .globo-aviso-menu { background-color: #fff; color: #2d3748; padding: 8px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.12); border: 1px solid #e2e8f0; white-space: nowrap; opacity: 1; transition: opacity 0.4s ease; position: relative; }
+                .globo-aviso-menu::after { content: ''; position: absolute; left: -6px; top: 50%; transform: translateY(-50%) rotate(45deg); width: 10px; height: 10px; background-color: #fff; border-left: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
+                .ocultar-aviso-global { opacity: 0 !important; pointer-events: none; }
+            `;
+            document.head.appendChild(estilosMenu);
+
+            // Crear los elementos estructurales HTML en el DOM de la página pública
+            const contenedorGlobal = document.createElement("div");
+            contenedorGlobal.id = "btnMenuFlotanteHemeroteca";
+            contenedorGlobal.className = "contenedor-menu-historico";
+
+            contenedorGlobal.innerHTML = `
+                <button class="btn-hamburguesa-flotante" onclick="redirigirAHemeroteca()" title="Abrir Menú">☰</button>
+                <div id="avisoCartelHemeroteca" class="globo-aviso-menu">🏛️ Visita la Hemeroteca Digital</div>
+            `;
+
+            document.body.appendChild(contenedorGlobal);
+
+            // Ocultar el aviso flotante después de 6 segundos de lectura para que no estorbe la pantalla móvil
+            setTimeout(() => {
+                const cartel = document.getElementById("avisoCartelHemeroteca");
+                if (cartel) cartel.classList.add("ocultar-aviso-global");
+            }, 6000);
+        }
+
+        // Redirección instantánea al archivo de fotos antiguas
+        function redirigirAHemeroteca() {
+            window.location.href = "archivo.html";
+        }
+
+        // Registrar la inicialización junto con la carga del DOM de la página pública
+        window.addEventListener("DOMContentLoaded", crearMenuFlotanteHemeroteca);
+        
+        
+        
+        
+        
+        
+         // ⚠️ ENLACE OBLIGATORIO: PEGA AQUÍ LA URL DE TU NUEVA APP WEB DE CHAT (/exec)
+  const URL_NUEVO_CHAT = "https://script.google.com/macros/s/AKfycbxX45PypgI66fJTxpb1YtOM83IskVk1r0Uv8N6MIsJTQu8Unu0n0NtwW4Z-MBh2tW8s/exec";
+
+  document.addEventListener("DOMContentLoaded", function() {
+    actualizarChatContinuo();
+    // Consulta automatizada cada 7 segundos para simular tiempo real de forma eficiente
+    setInterval(actualizarChatContinuo, 7000);
+  });
+
+  function actualizarChatContinuo() {
+    fetch(URL_NUEVO_CHAT + "?peticion=leer")
+      .then(res => res.json())
+      .then(function(datos) {
+        document.getElementById('txt-corazones').innerText = datos.totalCorazones || 0;
+        document.getElementById('txt-guinos').innerText = datos.totalGuinos || 0;
+        
+        var caja = document.getElementById('historial-chat');
+        caja.innerHTML = "";
+        
+        if(!datos.listaComentarios || datos.listaComentarios.length === 0) {
+          caja.innerHTML = '<p style="color: #a0aec0; text-align: center; font-size: 0.85rem; margin: auto 0;">No hay mensajes aún. ¡Sé el primero!</p>';
+          return;
+        }
+        
+        datos.listaComentarios.forEach(function(item) {
+          caja.innerHTML += `
+            <div style="background: white; padding: 8px 12px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.9rem; box-shadow: 0 1px 3px rgba(0,0,0,0.02); word-break: break-word;">
+              <span style="color: #2b6cb0; font-weight: bold; font-size: 0.8rem; display: block; margin-bottom: 2px;">@${item.usuario}</span>
+              <span style="color: #2d3748;">${item.mensaje}</span>
+            </div>`;
+        });
+        caja.scrollTop = caja.scrollHeight; // Auto-scroll al último mensaje recibido
+      })
+      .catch(err => console.error("Error leyendo comunidad:", err));
+  }
+
+  function reaccionar(tipoEmoji) {
+    var btn = tipoEmoji === 'Corazon' ? document.getElementById('btn-corazon') : document.getElementById('btn-guino');
+    btn.disabled = true;
+    
+    // Al reaccionar, pasamos un apodo genérico "Reacción" para mantener limpia la base de datos
+    fetch(`${URL_NUEVO_CHAT}?peticion=guardar&tipo=${tipoEmoji}&contenido=1&apodo=Reaccion`)
+      .then(() => {
+        actualizarChatContinuo();
+        btn.disabled = false;
+      })
+      .catch(() => btn.disabled = false);
+  }
+
+  function enviarMensajeChat() {
+    var inputApodo = document.getElementById('apodo-usuario');
+    var inputMsg = document.getElementById('mensaje-usuario');
+    
+    var apodo = inputApodo.value.trim().replace(/[^a-zA-Z0-9_]/g, ""); // Limpia caracteres raros del apodo
+    var texto = inputMsg.value.trim();
+    
+    if(texto === "") return;
+    if(apodo === "") apodo = "Lector_Anonimo";
+
+    inputMsg.value = ""; // Limpieza de interfaz instantánea para dar agilidad al usuario
+    
+    fetch(`${URL_NUEVO_CHAT}?peticion=guardar&tipo=Comentario&contenido=${encodeURIComponent(texto)}&apodo=${encodeURIComponent(apodo)}`)
+      .then(() => actualizarChatContinuo());
+  }
+        
+        
+    </script>
+</body>
+</html>
+
+   
+  
+
+   
+
+
+  
+
+            
+       
