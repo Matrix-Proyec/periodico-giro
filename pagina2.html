@@ -627,70 +627,7 @@ header h1 {
         
         
         
-         // ⚠️ ENLACE OBLIGATORIO: PEGA AQUÍ LA URL DE TU NUEVA APP WEB DE CHAT (/exec)
-  const URL_NUEVO_CHAT = "https://script.google.com/macros/s/AKfycbxX45PypgI66fJTxpb1YtOM83IskVk1r0Uv8N6MIsJTQu8Unu0n0NtwW4Z-MBh2tW8s/exec";
-
-  document.addEventListener("DOMContentLoaded", function() {
-    actualizarChatContinuo();
-    // Consulta automatizada cada 7 segundos para simular tiempo real de forma eficiente
-    setInterval(actualizarChatContinuo, 7000);
-  });
-
-  function actualizarChatContinuo() {
-    fetch(URL_NUEVO_CHAT + "?peticion=leer")
-      .then(res => res.json())
-      .then(function(datos) {
-        document.getElementById('txt-corazones').innerText = datos.totalCorazones || 0;
-        document.getElementById('txt-guinos').innerText = datos.totalGuinos || 0;
         
-        var caja = document.getElementById('historial-chat');
-        caja.innerHTML = "";
-        
-        if(!datos.listaComentarios || datos.listaComentarios.length === 0) {
-          caja.innerHTML = '<p style="color: #a0aec0; text-align: center; font-size: 0.85rem; margin: auto 0;">No hay mensajes aún. ¡Sé el primero!</p>';
-          return;
-        }
-        
-        datos.listaComentarios.forEach(function(item) {
-          caja.innerHTML += `
-            <div style="background: white; padding: 8px 12px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.9rem; box-shadow: 0 1px 3px rgba(0,0,0,0.02); word-break: break-word;">
-              <span style="color: #2b6cb0; font-weight: bold; font-size: 0.8rem; display: block; margin-bottom: 2px;">@${item.usuario}</span>
-              <span style="color: #2d3748;">${item.mensaje}</span>
-            </div>`;
-        });
-        caja.scrollTop = caja.scrollHeight; // Auto-scroll al último mensaje recibido
-      })
-      .catch(err => console.error("Error leyendo comunidad:", err));
-  }
-
-  function reaccionar(tipoEmoji) {
-    var btn = tipoEmoji === 'Corazon' ? document.getElementById('btn-corazon') : document.getElementById('btn-guino');
-    btn.disabled = true;
-    
-    // Al reaccionar, pasamos un apodo genérico "Reacción" para mantener limpia la base de datos
-    fetch(`${URL_NUEVO_CHAT}?peticion=guardar&tipo=${tipoEmoji}&contenido=1&apodo=Reaccion`)
-      .then(() => {
-        actualizarChatContinuo();
-        btn.disabled = false;
-      })
-      .catch(() => btn.disabled = false);
-  }
-
-  function enviarMensajeChat() {
-    var inputApodo = document.getElementById('apodo-usuario');
-    var inputMsg = document.getElementById('mensaje-usuario');
-    
-    var apodo = inputApodo.value.trim().replace(/[^a-zA-Z0-9_]/g, ""); // Limpia caracteres raros del apodo
-    var texto = inputMsg.value.trim();
-    
-    if(texto === "") return;
-    if(apodo === "") apodo = "Lector_Anonimo";
-
-    inputMsg.value = ""; // Limpieza de interfaz instantánea para dar agilidad al usuario
-    
-    fetch(`${URL_NUEVO_CHAT}?peticion=guardar&tipo=Comentario&contenido=${encodeURIComponent(texto)}&apodo=${encodeURIComponent(apodo)}`)
-      .then(() => actualizarChatContinuo());
-  }
         
         
     </script>
